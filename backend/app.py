@@ -51,5 +51,30 @@ async def get_emission_stats(request: Request, bytes: int, host: str):
     co2_emission = get_co2_emission(bytes, green)
     return co2_emission
 
+@app.post("/save-session")
+async def save_session(request: Request):
+    """Save the session to the database"""
+    data = await request.json()
+    username = data["username"]
+    session_id = data["session_id"]
+    timestamp = data["timestamp"]
+
+    all_requests = data["all_requests"]
+    for req in all_requests:
+        request_url = req["request_url"]
+        co2_renewable_grams = req["co2_renewable_grams"]
+        co2_grid_grams = req["co2_grid_grams"]
+        energy_kwg = req["energy_kwg"]
+        category = req["category"]
+        await db.add_session(session_id, username, timestamp, request_url, co2_renewable_grams, co2_grid_grams, energy_kwg, category)
+
+    return {"message": "Session saved"}
+
+@app.get("/get-session")
+async def get_session(request: Request, session_id: str):
+    """Get the session from the database"""
+    session = await db.fetch_session(session_id)
+    return session
+
 if __name__ == '__main__':
     uvicorn.run("app:app", reload=True)

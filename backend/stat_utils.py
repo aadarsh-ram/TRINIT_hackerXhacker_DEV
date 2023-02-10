@@ -21,7 +21,8 @@ def get_co2_emission(bytes, green):
         green_category = "non-green"
 
     edited_response = {
-        "co2": statistics["co2"],
+        "co2_renewable_grams": statistics["co2"]["renewable"]["grams"],
+        "co2_grid_grams": statistics["co2"]["grid"]["grams"],
         "energy_kwg": statistics["energy"],
         "category": green_category,
     }
