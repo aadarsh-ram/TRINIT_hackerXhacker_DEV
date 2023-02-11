@@ -1,7 +1,7 @@
 import os
 import uvicorn
 from dotenv import load_dotenv
-from fastapi import FastAPI, status, Response, Request
+from fastapi import FastAPI, status, Response, Request, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 
 # Import custom modules
@@ -74,15 +74,24 @@ async def save_session(request: Request):
     username = data["username"]
     session_id = data["session_id"]
     timestamp = data["timestamp"]
+    total_co2_renewable_grams = data["total_co2_renewable_grams"]
+    total_co2_grid_grams = data["total_co2_grid_grams"]
+    total_energy_kwg = data["total_energy_kwg"]
+
+    try:
+        await db.add_session(username, session_id, timestamp, total_co2_renewable_grams, total_co2_grid_grams, total_energy_kwg)
+    except Exception as e:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST)
 
     all_requests = data["all_requests"]
     for req in all_requests:
+        timestamp = req["timestamp"]
         request_url = req["request_url"]
         co2_renewable_grams = req["co2_renewable_grams"]
         co2_grid_grams = req["co2_grid_grams"]
         energy_kwg = req["energy_kwg"]
         category = req["category"]
-        await db.add_session(session_id, username, timestamp, request_url, co2_renewable_grams, co2_grid_grams, energy_kwg, category)
+        await db.add_session_request(session_id, timestamp, request_url, co2_renewable_grams, co2_grid_grams, energy_kwg, category)
 
     return {"message": "Session saved"}
 
