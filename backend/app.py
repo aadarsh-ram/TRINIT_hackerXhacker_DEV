@@ -100,10 +100,10 @@ async def get_user_stats(request: Request):
 @app.post("/signup")
 async def signup(request: Request, user: UserSchema = Body(...)):
     """Create a new user"""
-    try:
-        await db.add_user(user.username, get_hashed_password(user.password))
-    except Exception as e:
-        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST) from e
+    # try:
+    await db.add_user(user.username, get_hashed_password(user.password))
+    # except Exception as e:
+    #     raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST) from e
 
     return signJWT(user.username)
 
