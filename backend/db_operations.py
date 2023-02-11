@@ -25,9 +25,9 @@ class Database:
             "username": username,
             "session_id": session_id,
             "timestamp": datetime.fromisoformat(timestamp),
-            "total_co2_renewable_grams": total_co2_renewable_grams,
-            "total_co2_grid_grams": total_co2_grid_grams,
-            "total_energy_kwg": total_energy_kwg
+            "total_co2_renewable_grams": str(total_co2_renewable_grams),
+            "total_co2_grid_grams": str(total_co2_grid_grams),
+            "total_energy_kwg": str(total_energy_kwg)
         }
         await self.database.execute(query=query, values=values)
 
@@ -37,9 +37,9 @@ class Database:
             "session_id": session_id,
             "timestamp": datetime.fromisoformat(timestamp),
             "request_url": request_url,
-            "co2_renewable_grams": co2_renewable_grams,
-            "co2_grid_grams": co2_grid_grams,
-            "energy_kwg": energy_kwg,
+            "co2_renewable_grams": str(co2_renewable_grams),
+            "co2_grid_grams": str(co2_grid_grams),
+            "energy_kwg": str(energy_kwg),
             "category": category
         }
         await self.database.execute(query=query, values=values)

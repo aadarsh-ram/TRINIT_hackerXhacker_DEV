@@ -2,7 +2,7 @@ import requests
 
 def check_green_host(hostname):
     """Check if the host is green"""
-    if hostname is None:
+    if (hostname is None or hostname == ""):
         return 0
     base_url = f"https://api.thegreenwebfoundation.org/api/v3/greencheck/{hostname}"
     response = requests.get(base_url)
