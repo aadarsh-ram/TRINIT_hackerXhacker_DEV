@@ -17,6 +17,7 @@ import { useNavigate } from 'react-router-dom';
 
 
 
+
 const pages = [['About',"/about"],['Code'," https://github.com/aadarsh-ram/TRINIT_hackerXhacker_DEV"]];
 const settings = ['Dashboard', 'Logout'];
 const loginSettings = ['Login']
@@ -45,20 +46,18 @@ function Navbar() {
 
   useEffect(()=>{
     setIsLoggedIn(sessionStorage.getItem("jwt"))
-    console.log(sessionStorage.getItem("jwt"))
   },[])
 
   useEffect(()=>{
     isLoggedIn ? setProfileDrop(settings) : setProfileDrop(loginSettings)
-    isLoggedIn ? console.log("a") : console.log("b")
 
   },[isLoggedIn])
 
   return (
-    <AppBar position="static" style={{ background: '#7CFC00	' }}>
+    <AppBar position="static" style={{ background: '#7CFC00' }}>
       <Container maxWidth="xl">
         <Toolbar disableGutters>
-        <FaLeaf/>
+        <FaLeaf color='#000000'/>
           <Typography
             variant="h6"
             noWrap
@@ -71,7 +70,7 @@ function Navbar() {
               fontFamily: 'monospace',
               fontWeight: 700,
               letterSpacing: '.3rem',
-              color: 'inherit',
+              color: "#000000",
               textDecoration: 'none',
             }}
           >
@@ -109,7 +108,7 @@ function Navbar() {
             >
               {pages.map((page) => (
                 <MenuItem key={page} onClick={handleCloseNavMenu}>
-                  <a href={page[1]}><Typography textAlign="center">{page[0]}</Typography> </a>
+                  <a href={page[1]}><Typography textAlign="center" color={"#000000"}>{page[0]}</Typography> </a>
                 </MenuItem>
               ))}
             </Menu>
@@ -126,7 +125,7 @@ function Navbar() {
               fontFamily: 'monospace',
               fontWeight: 700,
               letterSpacing: '.3rem',
-              color: 'inherit',
+              color:"#000000",
               textDecoration: 'none',
             }}
           >
@@ -134,11 +133,9 @@ function Navbar() {
           </Typography>
           <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
             {pages.map((page) => (
-              <a href={page[1]}><Button
-
-                key={page}
+              <a key={page} href={page[1]}><Button
                 onClick={handleCloseNavMenu}
-                sx={{ my: 2, color: 'white', display: 'block' }}
+                sx={{ my: 2, color: '#000000', display: 'block' }}
               >
                 {page[0]}
               </Button></a>
@@ -170,7 +167,10 @@ function Navbar() {
             {profileDrop.map((setting) => (
                 <MenuItem key={setting} onClick={handleCloseUserMenu}>
                   <Typography onClick={()=>{
-                    if(setting == 'Login') navigate("/login");
+                    if(setting == 'Login') {
+                      navigate("/login");
+                      sessionStorage.setItem("jwt","abcdf");
+                    }
                     if(setting == 'Dashboard') navigate("/list")
                     if(setting == 'Logout') {
                         setIsLoggedIn(false)
