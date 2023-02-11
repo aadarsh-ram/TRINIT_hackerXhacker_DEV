@@ -70,6 +70,37 @@ chrome.tabs.onUpdated.addListener(
     }
 )
 
+function add_before_closing(tabid){
+    try{
+        let allSmallReqs = netList[tabid+"list"]
+        let totSize = 0
+        allSmallReqs.map((num) =>{
+            if(num.size && !num.cached){
+                totSize+=num.size;
+            }
+        });
+        let tt = attached_tabs.find(obj=>obj.id == tabid)
+        netList[tabid+"list"] = []
+            let reqUrl=tt["all_requests"][tt["all_requests"].length-1]["request_url"]
+            fetch('http://localhost:8000/get-emission-stats?'+new URLSearchParams({
+                bytes:totSize,
+                host:reqUrl
+            })).then(async(res)=>{
+                let response = await(res.json())
+                let currobj = addRequestToAttachedTabs(response,reqUrl)
+                tt["all_requests"].push(currobj)
+                clear_tab_data(tabid)
+            }).catch((e)=>{
+                console.log(e)
+            })
+    }
+    catch(e){
+        console.log("error is : ",e)
+    }
+}
+
+
+
 console.log("background")
 
 // current tab being inspected
@@ -94,7 +125,8 @@ chrome.tabs.onActivated.addListener(function(info) {
 
 // tab deleted
 chrome.tabs.onRemoved.addListener(function(tabid){
-    clear_tab_data(tabid);
+    add_before_closing(tabid)
+    // clear_tab_data(tabid);
 });
 
 // page load start
@@ -106,7 +138,7 @@ chrome.webNavigation.onBeforeNavigate.addListener(function(details) {
 
         is_loading = true;
 
-        clear_tab_data(details.tabId);
+        // clear_tab_data(details.tabId);
 
         // remember time
         var t = details.timeStamp;
@@ -138,6 +170,11 @@ function clear_tab_data(tabid) {
 
     try{
         let tt = attached_tabs.find(obj=>obj.id == tabid)
+        tt["all_requests"].map((num) =>{
+            tt["total_co2_grid_grams"] +=num["co2_grid_grams"]
+            tt["total_energy_kwg"]  += num["energy_kwg"]
+            tt["total_co2_renewable_grams"] += num["co2_renewable_grams"]
+        });
         fetch('http://localhost:8000/save-session',{
             method:"POST",
             body:JSON.stringify(tt)
@@ -286,13 +323,10 @@ function startDebugger(tabid) {
 function stopDebugger(tabid) {
     deb("stopDebugger");
 
-    gtabid = 0;
     is_cache_disabled = false;
 
     // does not call onDetachDebugger!
     chrome.debugger.detach({tabId:tabid});
-
-    update_badge(tabid);
 }
 
 function setCache(tabid, state) {
@@ -339,8 +373,6 @@ function onAttachDebugger(tabid) {
         chrome.runtime.sendMessage({"attach_error":msg});
     } else {
         deb( "onAttach ok");
-
-        gtabid = tabid;
     }
 }
 function onDetachDebugger(source, reason) {
@@ -350,9 +382,6 @@ function onDetachDebugger(source, reason) {
 
     // ask to refresh popup
     chrome.runtime.sendMessage({load_completed: 1});
-
-    gtabid = 0;
-    update_badge(0); // can be zero
 }
 
 function onNetworkEvent(debuggeeId, message, params) {
@@ -382,15 +411,12 @@ function onNetworkEvent(debuggeeId, message, params) {
         var size = params.dataLength; // is uncompressed!
 //        var size = params.encodedDataLength; // zero!
         set_file_size(tabid, reqid, size, 1);
-        update_badge(tabid);
 
     } else if (message == "Network.loadingFinished") {
 
         var reqid = params.requestId
         var size = params.encodedDataLength;
         set_file_size(tabid, reqid, size);
-
-        update_badge(tabid);
     }
 //    else {
 //        deb(message, params);
