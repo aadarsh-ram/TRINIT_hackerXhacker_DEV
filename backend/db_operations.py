@@ -68,3 +68,17 @@ class Database:
             "username": username
         }
         return await self.database.fetch_all(query=query, values=values)
+    
+    async def website_search(self, search_term):
+        query = """
+            SELECT request_url, category FROM session_requests 
+            WHERE request_url LIKE :search_term 
+            UNION 
+            SELECT :website, 'unknown' 
+            WHERE NOT EXISTS (SELECT 1 FROM session_requests WHERE request_url LIKE :search_term);
+        """
+        values = {
+            "search_term": f"%{search_term}%",
+            "website": search_term
+        }
+        return await self.database.fetch_one(query=query, values=values)

@@ -14,7 +14,7 @@ load_dotenv()
 
 # Import custom modules
 from db_operations import Database
-from stat_utils import check_green_host, get_co2_emission
+from stat_utils import check_green_host, get_co2_emission, get_recommended_sites
 from utils import get_hashed_password, verify_password
 
 # Postgres database variables
@@ -52,11 +52,25 @@ async def shutdown():
 async def hello():
     return {"message": "Hello user! Tip: open /docs or /redoc for documentation"}
 
+@app.get("/get-recommendations")
+async def get_recommendations(request: Request, url: str):
+    """Get recommended sites for a given url"""
+    try:
+        recommendations = get_recommended_sites(url)
+    except Exception as e:
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR) from e
+
+    recommends_with_stats = [await db.website_search(recommendation) for recommendation in recommendations]
+    return recommends_with_stats
+
 @app.get("/get-emission-stats")
 async def get_emission_stats(request: Request, bytes: int, host: Optional[str] = None):
     """Get the co2 emission of a website"""
-    green = check_green_host(host)
-    co2_emission = get_co2_emission(bytes, green)
+    try:
+        green = check_green_host(host)
+        co2_emission = get_co2_emission(bytes, green)
+    except Exception as e:
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR) from e
     return co2_emission
 
 @app.get("/get-user-sessions")
