@@ -5,7 +5,9 @@ import Typography from '@mui/material/Typography';
 import CircularProgress from '@mui/material/CircularProgress';
 
 
-const color = {"green":"#00FF40","semi-green":"#90EE90","no-green":"#D0312D"}
+const colorSet = {"green":"#BCE29E","semi-green":"#E5EBB2","no-green":"#FF8787"}
+
+
 
 const Recommendation = ({data,loading})=>{
 
@@ -19,27 +21,38 @@ const Recommendation = ({data,loading})=>{
         setIsLoading(loading)
     },[loading])
 
-    return (
+    return ((isLoading) ? 
+        <Card sx={{
+            borderRadius: "20px",
+            background: "#111d13",
+            minHeight:"20vh",
+            display:"flex",
+            justifyContent:"center",
+            alignItems: "center",
+            boxShadow: "rgba(50, 50, 93, 0.25) 0px 30px 60px -12px, rgba(0, 0, 0, 0.3) 0px 18px 36px -18px"
+        }}>
+            <CircularProgress size={50}/>
+        </Card> :
     <Card sx={{
         borderRadius: "20px",
-        background: "#FFFFFF",
+        background: "#111d13",
         minHeight:"20vh",
+        boxShadow: "rgba(50, 50, 93, 0.25) 0px 30px 60px -12px, rgba(0, 0, 0, 0.3) 0px 18px 36px -18px"
     }}>
       <CardContent style={{display:"flex"}}>
-        {(isLoading) ? <div><CircularProgress size={50}/></div> :
-        <div>
-            <Typography variant="h5" component="div" style={{paddingBottom:"1rem"}}>
+        <div style={{padding:"1rem"}}>
+            <Typography variant="h5" component="div" style={{color:"#70e000",paddingBottom:"1rem"}}>
                 Recommendations
             </Typography>
             {list.map((item,i)=>{
             return <a key={i} 
-                        style={{color: color[item["category"]]}}
+                        style={{color: colorSet[item["category"]]}}
                         href={"https://"+item["request_url"]}>
                         <Typography  variant="body2">
                             {item["request_url"]}
                         </Typography>
                     </a>})}
-        </div>}
+        </div>
       </CardContent>
     </Card>
   );

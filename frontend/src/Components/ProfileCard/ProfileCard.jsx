@@ -32,27 +32,30 @@ export default function ProfileCard({userStats}) {
   return (
     <Card sx={{
         borderRadius : "20px",
-        boxShadow: "rgba(50, 50, 93, 0.25) 0px 30px 60px -12px, rgba(0, 0, 0, 0.3) 0px 18px 36px -18px"
+        boxShadow: "rgba(50, 50, 93, 0.25) 0px 30px 60px -12px, rgba(0, 0, 0, 0.3) 0px 18px 36px -18px",
+        background: "#dde7c7",
+
     }}>
       <CardActionArea>
         <div style={{ display:'flex', justifyContent:'center' }}>
             <BsFillPersonFill size={200}/>
         </div>
         <CardContent>
+        <div style={{display:"flex",justifyContent:"center"}}>
           <Typography gutterBottom variant="h5" component="div">
             {user}
-          </Typography>
-          <div style={{display:"flex",flexFlow:"row nowrap"}}>
+          </Typography></div>
+          <div style={{display:"flex",flexFlow:"row nowrap",padding:"0.5rem"}}>
             { (finder(stats["user_co2_grid_grams"])) ? 
               <div><KeyboardDoubleArrowUpIcon style={{color:"#FF0000"}}/></div>
               :<div><KeyboardDoubleArrowDownIcon style={{color:"#0000FF"}}/></div>}
             <div>
                 <Typography sx={{ mb: 1.5 }} color="text.secondary">
-                Total CO2 Grid Emissions : {stats["user_co2_grid_grams"]} grams
+                    Total CO2 Grid Emissions : {stats["user_co2_grid_grams"]} grams
                 </Typography>
             </div>
         </div>
-        <div style={{display:"flex",flexFlow:"row nowrap"}}>
+        <div style={{display:"flex",flexFlow:"row nowrap",padding:"0.5rem"}}>
             { (finder(stats["user_co2_renewable_grams"])) ? 
               <div><KeyboardDoubleArrowUpIcon style={{color:"#FF0000"}}/></div>
               :<div><KeyboardDoubleArrowDownIcon style={{color:"#0000FF"}}/></div>}
@@ -62,7 +65,7 @@ export default function ProfileCard({userStats}) {
                 </Typography>
             </div>
         </div>
-        <div style={{display:"flex",flexFlow:"row nowrap"}}>
+        <div style={{display:"flex",flexFlow:"row nowrap",padding:"0.5rem"}}>
             { (finder(stats["user_energy_kwg"])) ? 
               <div><KeyboardDoubleArrowUpIcon style={{color:"#FF0000"}}/></div>
               :<div><KeyboardDoubleArrowDownIcon style={{color:"#0000FF"}}/></div>}

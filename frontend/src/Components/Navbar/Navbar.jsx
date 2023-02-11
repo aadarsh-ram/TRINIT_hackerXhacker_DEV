@@ -57,7 +57,7 @@ function Navbar() {
   },[isLoggedIn])
 
   return (
-    <AppBar position="static" style={{ background: '#7CFC00' }}>
+    <AppBar position="sticky" style={{ background: '#50C878' }}>
       <Container maxWidth="xl">
         <Toolbar disableGutters>
         <FaLeaf color='#000000'/>

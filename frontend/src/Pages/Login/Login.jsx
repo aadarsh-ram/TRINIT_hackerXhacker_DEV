@@ -30,6 +30,15 @@ const Login = ()=>{
         if(response.ok){
             let body = await response.json()
             localStorage.setItem(config["token_name"],body['access_token'])
+            // try{
+            //     chrome.runtime.sendMessage({
+            //         message: "token_submission",
+            //         url:response['access_token']
+            //     });
+            // }
+            // catch(e){
+            //     console.log("error",e)
+            // }
             navigate('/list')
             login("Logged In")
         }

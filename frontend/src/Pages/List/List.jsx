@@ -11,41 +11,8 @@ import jwt from 'jwt-decode'
 import { config } from "../../config/index"
 
 
+const colorSet = {"green":"#BCE29E","semi-green":"#E5EBB2","no-green":"#FF8787"}
 
-// const arr = [
-//     {
-//         "session_id": "12346",
-//         "timestamp": "2011-05-19T15:36:38",
-//         "color": "green"
-//     },
-//     {
-//         "session_id": "12345",
-//         "timestamp": "2011-05-18T15:36:38",
-//         "color": "no-green"
-//     }
-// ]
-// const data = [
-//     {
-//         "session_id": "12346",
-//         "timestamp": "2011-05-17T15:37:38",
-//         "request_url": "googl.com",
-//         "co2_renewable_grams": "10",
-//         "co2_grid_grams": "20",
-//         "energy_kwg": "100",
-//         "category": "green"
-//     },
-//     {
-//         "session_id": "12346",
-//         "timestamp": "2011-05-17T15:38:38",
-//         "request_url": "facbe.com",
-//         "co2_renewable_grams": "30",
-//         "co2_grid_grams": "50",
-//         "energy_kwg": "200",
-//         "category": "semi-green"
-//     }
-// ]
-
-const color = {"green":"#00FF40","semi-green":"#90EE90","no-green":"#D0312D"}
 const List = ()=>{
 
     const navigate = useNavigate()
@@ -125,6 +92,7 @@ const List = ()=>{
         else{
             setExpanded(false)
             setWebCard(null)
+            setRecom([])
         }
     };
 
@@ -145,17 +113,23 @@ const List = ()=>{
         setIsRecomLoading(false)       
     }
     
-
+    const bgImage = ()=>{
+        if(userStats["user_co2_grid_grams"]+ userStats["user_co2_renewable_grams"] < 10) return "/lightGreen"
+        else if(userStats["user_co2_grid_grams"]+ userStats["user_co2_renewable_grams"] < 40) return "/semiGreen"
+        else return "/red"
+    }
     return (
     (isLoading)?  <Loader/> :<>
         <Navbar/>
-        <section style={{height:"35vh",width:"100vw",backgroundColor: "#0093E9",
-                    backgroundImage: "linearGradient(160deg, #0093E9 0%, #80D0C7 100%)"}}>
+        <section style={{height:"35vh",width:"100%",overflow:"clip"}}
+        // backgroundColor: "#0093E9", backgroundImage: "linearGradient(160deg, #0093E9 0%, #80D0C7 100%)"}}
+        >
+            <img style={{height:"35vh",width:"100%"}} src={bgImage()+".jpg"} />
         </section>
 
-        <section style={{background:"beige" ,height:"55vh",width:"100vw",display:"flex",justifyContent:"center",flexFlow:"row wrap"}}>
+        <section style={{background:"#DAD7CD" ,height:"100vh",width:"100vw",display:"flex",justifyContent:"center",flexFlow:"row wrap"}}>
             <div style={{position:"relative",top:"-10vh",padding:"1rem",flexBasis:"20vw"}}><ProfileCard userStats={userStats}/></div>
-            <div style={{position:"relative",top:"0vh",padding:"1rem",flexBasis:"50vw"}}>
+            <div style={{position:"relative",top:"0vh",padding:"1rem",flexBasis:"50vw",height:"40vh",overflowY:"auto"}}>
                 {(!empty) ? <></>: <Accordion 
                         style = {{margin:"1rem", padding:"0.3rem", boxShadow: "rgba(100, 100, 111, 0.2) 0px 7px 29px 0px", borderRadius:"20px" }}>
                         <AccordionSummary
@@ -168,7 +142,7 @@ const List = ()=>{
                 {sessionList.map((item,i)=>{
                     return (
                     <Accordion 
-                        style = {{background: color[item["color"]],margin:"1rem", padding:"0.3rem", boxShadow: (expanded === i) ? "rgba(0, 0, 0, 0.35) 0px 5px 15px" : "rgba(100, 100, 111, 0.2) 0px 7px 29px 0px", borderRadius:"20px" }}
+                        style = {{background: colorSet[item["green_category"]],margin:"1rem", padding:"0.3rem", boxShadow: (expanded === i) ? "rgba(0, 0, 0, 0.35) 0px 5px 15px" : "rgba(100, 100, 111, 0.2) 0px 7px 29px 0px", borderRadius:"20px" }}
                         expanded={expanded === i} 
                         onChange={handleChange(i)} 
                         key={i} >
@@ -177,11 +151,11 @@ const List = ()=>{
                         aria-controls="panel1a-content"
                         >
                         <Typography>
-                            <BsFillCalendarFill style={{marginRight:"0.2rem"}}/>
+                            <BsFillCalendarFill style={{marginRight:"0.6rem"}}/>
                             {item["timestamp"].split("T")[0]}
                         </Typography>
                         <Typography style={{marginLeft:"20vw"}}>
-                            <BsClockFill style={{marginRight:"0.2rem"}}/>
+                            <BsClockFill style={{marginRight:"0.6rem"}}/>
                             {item["timestamp"].split("T")[1]}
                         </Typography>
                         </AccordionSummary>

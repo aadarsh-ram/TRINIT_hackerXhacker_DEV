@@ -7,7 +7,7 @@ import KeyboardDoubleArrowDownIcon from '@mui/icons-material/KeyboardDoubleArrow
 
 
 
-const colorSet = {"green":"#00FF40","semi-green":"#90EE90","no-green":"#D0312D"}
+const colorSet = {"green":"#BCE29E","semi-green":"#E5EBB2","no-green":"#FF8787"}
 
 
 
@@ -20,12 +20,14 @@ const Emission = ({data})=> {
     "co2_grid_grams": "",
     "energy_kwg": "",
     "category": ""})
-    const [color,setColor] = useState("#FFFFFF")
+    const [color,setColor] = useState("#dde7c7")
 
     useEffect(()=>{
         if(data != null) {
             setEmissionData(data)
-            setColor(colorSet[data["category"]])
+            setColor(colorSet["green"]
+              // colorSet[data["category"]]
+              )
         } else{
             setEmissionData({"session_id": "",
             "timestamp": "",
@@ -34,7 +36,7 @@ const Emission = ({data})=> {
             "co2_grid_grams": "",
             "energy_kwg": "",
             "category": ""})
-            setColor("#FFFFFF")
+            setColor("#dde7c7")
         }
     },[data])
 
@@ -48,9 +50,11 @@ const Emission = ({data})=> {
         marginBottom: "1rem",
         borderRadius: "20px",
         background: color,
-        boxShadow: "rgba(0, 0, 0, 0.1) 0px 4px 6px -1px, rgba(0, 0, 0, 0.06) 0px 2px 4px -1px"
+        boxShadow: "rgba(50, 50, 93, 0.25) 0px 30px 60px -12px, rgba(0, 0, 0, 0.3) 0px 18px 36px -18px"
+        ,padding:"1rem"
+
     }}>
-      <CardContent>
+      <CardContent >
         <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
           Website
         </Typography>
@@ -95,6 +99,7 @@ const Emission = ({data})=> {
         borderRadius: "20px",
         background: color,
         boxShadow: "rgba(0, 0, 0, 0.1) 0px 4px 6px -1px, rgba(0, 0, 0, 0.06) 0px 2px 4px -1px"
+        ,padding:"1rem"
     }}>
       <CardContent>
         <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
