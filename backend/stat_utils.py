@@ -6,6 +6,9 @@ def check_green_host(hostname):
         return 0
     base_url = f"https://api.thegreenwebfoundation.org/api/v3/greencheck/{hostname}"
     response = requests.get(base_url)
+    if (response.status_code != 200):
+        # If the host is not found, assume it is not green
+        return 0
     return 1 if response.json()["green"] == 'true' else 0
 
 def get_co2_emission(bytes, green):
