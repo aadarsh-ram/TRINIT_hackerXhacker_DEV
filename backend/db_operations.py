@@ -63,7 +63,7 @@ class Database:
         return await self.database.fetch_all(query=query, values=values)
     
     async def fetch_user_sessions(self, username):
-        query = "SELECT session_id, timestamp FROM user_sessions WHERE username=:username ORDER BY timestamp DESC;"
+        query = "SELECT session_id, green_category, timestamp FROM user_sessions WHERE username=:username ORDER BY timestamp DESC;"
         values = {
             "username": username
         }
