@@ -25,11 +25,6 @@ export const routes = [
 		path: "/about",
 		element: <About />
 	},
-	// {
-	// 	title: "List",
-	// 	path: "/list",
-	// 	element: <List />,
-	// },
 ];
 
 export const privateRoutes = [

@@ -3,6 +3,13 @@ import { useNavigate } from "react-router-dom";
 import { Loader, Navbar } from "../../Components";
 import { config } from "../../config/index"
 import { login,error } from "../../Components/Toast/Toast"
+import IconButton from '@mui/material/IconButton';
+import Input from '@mui/material/Input';
+import InputLabel from '@mui/material/InputLabel';
+import InputAdornment from '@mui/material/InputAdornment';
+import FormControl from '@mui/material/FormControl';
+import Visibility from '@mui/icons-material/Visibility';
+import VisibilityOff from '@mui/icons-material/VisibilityOff';
 
 
 
@@ -13,6 +20,17 @@ const SignUp = ()=>{
     const [password,setPassword] = useState("");
     const [confirm,setConfirm] = useState("");
     const [isLoading,setIsLoading] = useState(false);
+    const [showPassword, setShowPassword] = useState(false);
+    const [confirmShowPassword, setConfirmShowPassword] = useState(false);
+
+
+    const handleClickShowPassword = () => setShowPassword((show) => !show);
+    const handleClickConfirmShowPassword = () => setConfirmShowPassword((show) => !show);
+
+
+    const handleMouseDownPassword = (event) => {
+        event.preventDefault();
+    };
 
     useEffect(()=>{
         const login = localStorage.getItem(config["token_name"])
@@ -45,16 +63,63 @@ const SignUp = ()=>{
         }
     }
 
-    return(<>
+    return(<div style={{height:"100vh",overflowY:"clip"}}>
         <Navbar/>{
         (isLoading) 
         ? <Loader/>
-        :<>
-            <input value={userName} placeholder="Username" onChange={(e)=>{setUserName(e.target.value)}}/>
-            <input value={password} placeholder="Password" type="password" onChange={(e)=>{setPassword(e.target.value)}}/>
-            <input value={confirm} placeholder="Confirm Password" type="password" onChange={(e)=>{setConfirm(e.target.value)}}/>
-            <button onClick={()=>submit()}>Submit</button>
-        </>} </>);
+        :<div style={{background: "#DAD7CD",height:"95vh",display:"flex",flexFlow:"column",alignItems:"center",justifyContent:"center"}}>
+        <h1 style={{color:"#000000"}}>Sign Up</h1>
+        <FormControl sx={{ m: 4, width: '25ch' }} variant="standard">
+          <InputLabel htmlFor="standard-adornment-username">Username</InputLabel>
+          <Input
+            id="standard-adornment-username"
+            onChange={(e)=>{setUserName(e.target.value)}}
+          />
+        </FormControl>
+
+        <FormControl sx={{ m: 4, width: '25ch' }} variant="standard">
+          <InputLabel htmlFor="standard-adornment-password">Password</InputLabel>
+          <Input
+            id="standard-adornment-confirm-password"
+            type={showPassword ? 'text' : 'password'}
+            onChange={(e)=>{setPassword(e.target.value)}}
+            endAdornment={
+              <InputAdornment position="end">
+                <IconButton
+                  aria-label="toggle password visibility"
+                  onClick={handleClickShowPassword}
+                  onMouseDown={handleMouseDownPassword}
+                >
+                  {showPassword ? <VisibilityOff /> : <Visibility />}
+                </IconButton>
+              </InputAdornment>
+            }
+          />
+        </FormControl>
+
+        <FormControl sx={{ m: 4, width: '25ch' }} variant="standard">
+          <InputLabel htmlFor="standard-adornment-confirm-password">Confirm Password</InputLabel>
+          <Input
+            id="standard-adornment-password"
+            type={confirmShowPassword ? 'text' : 'password'}
+            onChange={(e)=>{setConfirm(e.target.value)}}
+            endAdornment={
+              <InputAdornment position="end">
+                <IconButton
+                  aria-label="toggle password visibility"
+                  onClick={handleClickConfirmShowPassword}
+                  onMouseDown={handleMouseDownPassword}
+                >
+                  {confirmShowPassword ? <VisibilityOff /> : <Visibility />}
+                </IconButton>
+              </InputAdornment>
+            }
+          />
+        </FormControl>
+
+            <button style={{margin:"1rem", padding:"1rem 2rem"}} onClick={()=>submit()}>Submit</button>
+            <a href="/login">Login</a>
+        </div>} </div>);
 }
 
 export default SignUp;

@@ -1,3 +1,5 @@
+
+
 .wrapper{
     flex-flow:row wrap;
 }
@@ -12,4 +14,80 @@
     .landingImage{
         display: none;
     }
+}
+
+.carbonimg{
+    object-fit: contain;
+    height: 100vh;
+    position: absolute;
+    left:42%;
+    z-index: 2;
+}
+
+.btn{
+   width: 30%;
+   background-color: #59B522 !important;
+   height: 6vh;
+   font-size: 20px !important;
+   box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.25) !important;
+   font-family: 'Inter', sans-serif !important;
+}
+
+.btngrp{
+    display: flex;
+    justify-content: space-around;
+    padding-left: 5%;
+    padding-right: 5%;
+    width: 100%;
+    padding-top: 2%;
+    padding-bottom: 2%;
+    height: 7%;
+}
+
+.heading{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-decoration: underline;
+    text-decoration-color: #59B522;
+    color: black;
+    font-size: 80px;
+    width: 80%;
+    margin-top: 30vh;
+    font-family: 'Inter', sans-serif !important;
+}
+
+.desc{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: black;
+    font-size: 40px;
+    width: 80%;
+    margin-top: 10vh;
+    font-family: 'Inter', sans-serif !important;
+}
+
+.btngrp2{
+    margin-top: 10vh;
+    width: 80%;
+    height: 7%;
+    display: flex;
+    justify-content: space-evenly;
+}
+
+.icondiv{
+    position: absolute;
+    top: 5vh;
+    width: 5vw;
+    height: 5vh;
+    left: 2vw;
+    display: flex;
+    justify-content: center;
+    align-items: center; 
+}
+
+.icon{
+    height: 80%;
+    width: 80%; 
 }

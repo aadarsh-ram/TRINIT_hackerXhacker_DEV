@@ -1,11 +1,32 @@
 import Button from '@mui/material/Button';
 import Box from '@mui/material/Box';
 import styles from "./styles.module.css"
-import { Navbar } from '../../Components';
+import { FaLeaf } from "react-icons/fa";
+import { useNavigate } from 'react-router-dom';
+import { config } from "../../config/index"
+
 
 const Landing = ()=>{
+    const navigate = useNavigate()
+    const loggedin = (localStorage.getItem(config["token_name"]) !== null)
+    const handleprofile = ()=>{
+        navigate('/list',{replace:true})
+    }
+    const handlelogin =()=>{
+        navigate('/login',{replace:true})
+    }
+    const handlesignup = ()=>{
+        navigate('/signup',{replace:true})
+    }
+    const handlelogout = ()=>{
+        localStorage.removeItem(config["token_name"])
+        navigate('/',{replace:true})
+    }
     return (<>
-        <Navbar/>
+        <img src="/Footprint.png" className={styles.carbonimg} />
+        <div className={styles.icondiv}>
+            <FaLeaf color='#000000' className={styles.icon}/>
+        </div>
         <div className={styles.wrapper} 
             style={{
                 display:"flex",
@@ -14,36 +35,39 @@ const Landing = ()=>{
                 justifyContent:"center"}}>
             <Box 
                 sx={{
-                    width: '50vw',
+                    width: '57.63vw',
                     height: '100vh',
-                    backgroundColor: '#808080',
+                    backgroundColor: '#ffffff',
             }}>
-                <h1>Eco Detect</h1>
+                <div className={styles.heading}>
+                    ECO TRACK.
+                </div>
+                <div className={styles.desc}>
+                    Track Your Carbon Footprints
+                </div>
+                <div className={styles.btngrp2}>
+                    <Button variant='contained' color='success' className={styles.btn}
+                    onClick={loggedin ? handlelogin : handleprofile}
+                    >
+                        {loggedin ? "PROFILE" : "LOG IN" }
+                    </Button>
+                    <Button variant='contained' color='success' className={styles.btn}
+                    onClick={loggedin ? handlelogout : handlesignup}
+                    >
+                        {loggedin ? "LOG OUT" : "SIGN UP" }
+                    </Button>
+                </div>
             </Box>
             <Box 
                 sx={{
-                    width: '50vw',
+                    width: '42.36vw',
                     height: '100vh',
                     backgroundColor: '#242424',
+                    background : 'url(/forest.png)',
+                    backdropFilter: 'blur(5px)'
             }}>
-                <h1>Eco </h1>
             </Box>
         </div>
-        {/* <div style={{
-            position:"absolute",
-            top:0,
-            height:"100vh",
-            width:"100vw",
-            display:"flex",
-            alignItems:"center",
-            justifyContent:"center"}}>
-            <div>
-                <img className={styles.landingImage} style={{
-                    height:"80vh",
-                    aspectRatio:"auto"}} 
-                    src='footprint.png'/>
-            </div>
-        </div> */}
     </>)
 }
 
