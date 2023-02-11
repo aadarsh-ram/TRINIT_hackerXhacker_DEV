@@ -5,7 +5,7 @@ services:
     container_name: ecotrack-api
     build: ./backend
     env_file:
-      - ./backend/.env
+      - ./.env
     environment:
       DB_HOST: ${DB_HOST}
       DB_USER: ${DB_USER}
@@ -25,7 +25,7 @@ services:
     volumes:
       - postgres_data:/data/postgres
     env_file:
-      - ./backend/.env
+      - ./.env
     environment:
       POSTGRES_HOST: ${DB_HOST}
       POSTGRES_USER: ${DB_USER}
