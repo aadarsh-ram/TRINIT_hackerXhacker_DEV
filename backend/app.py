@@ -30,7 +30,7 @@ app = FastAPI()
 # Allow anyone to call the API from their own apps
 app.add_middleware(
     CORSMiddleware,
-    allow_origin_regex="https?://.*",
+    allow_origins=["*"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -63,7 +63,7 @@ async def get_recommendations(request: Request, url: str):
     recommends_with_stats = [await db.website_search(recommendation) for recommendation in recommendations]
     return recommends_with_stats
 
-@app.get("/user/get-emission-stats")
+@app.get("/get-emission-stats")
 async def get_emission_stats(request: Request, bytes: int, host: Optional[str] = None):
     """Get the co2 emission of a website"""
     try:
