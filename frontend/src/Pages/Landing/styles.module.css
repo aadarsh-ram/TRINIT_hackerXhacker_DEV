@@ -1,0 +1,15 @@
+.wrapper{
+    flex-flow:row wrap;
+}
+
+@media screen and (max-width: 900px){
+    .wrapper{
+        flex-flow:column wrap;
+    }
+    .wrapper > div {
+        width: 100vw;
+    }
+    .landingImage{
+        display: none;
+    }
+}
