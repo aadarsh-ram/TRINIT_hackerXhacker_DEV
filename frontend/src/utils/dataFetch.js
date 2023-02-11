@@ -2,16 +2,21 @@
 export const dataFetch = async (
 	url,
 	method = "POST",
-	body = JSON.stringify({})
+	body
 ) => {
 	var headers = {
 		"Content-Type": "application/json",
-		Authorization: `Bearer ${sessionStorage.getItem("jwt")}`,
+		"Authorization": `Bearer ${localStorage.getItem("ecotrack-token")}`,
 	};
-	const response = await fetch(`http://localhost:4000${url}`, {
-		method,
-		headers,
-		body: body,
-	});
-	return response;
+	fetch(`http://localhost:8000${url}`, {
+		method: method,
+		headers: {
+			"Content-Type": "application/json",
+			"Authorization": `Bearer ${localStorage.getItem("ecotrack-token")}`,
+		},
+		body: JSON.stringify(body),
+	}).then(async(res)=>{
+		let response = (await res.json())
+		return response
+	}).catch(e =>console.log(e))
 };

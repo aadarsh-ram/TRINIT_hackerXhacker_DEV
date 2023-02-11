@@ -3,7 +3,7 @@ import { Outlet, Navigate } from "react-router-dom";
     
 export const PrivateWrapper = () => {
 	
-	if(sessionStorage.getItem("jwt") != null) {
+	if(localStorage.getItem("ecotrack-token") != null) {
 		return <Outlet />;
 	}  else {
 		return (<Navigate to="/login" />);

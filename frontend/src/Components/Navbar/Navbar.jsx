@@ -45,7 +45,7 @@ function Navbar() {
   };
 
   useEffect(()=>{
-    setIsLoggedIn(sessionStorage.getItem("jwt"))
+    setIsLoggedIn(localStorage.getItem("ecotrack-token"))
   },[])
 
   useEffect(()=>{
@@ -143,7 +143,7 @@ function Navbar() {
           </Box>
 
           <Box sx={{ flexGrow: 0 }}>
-            <Tooltip title="Open settings">
+            <Tooltip title="Profile">
               <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
               <BsFillPersonFill/>
               </IconButton>
@@ -169,12 +169,11 @@ function Navbar() {
                   <Typography onClick={()=>{
                     if(setting == 'Login') {
                       navigate("/login");
-                      sessionStorage.setItem("jwt","abcdf");
                     }
                     if(setting == 'Dashboard') navigate("/list")
                     if(setting == 'Logout') {
                         setIsLoggedIn(false)
-                        sessionStorage.removeItem("jwt");
+                        localStorage.removeItem("ecotrack-token");
                         navigate("/")
                     }
                     }} 
