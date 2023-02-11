@@ -78,7 +78,7 @@ class Database:
             "username": username
         }
         return await self.database.fetch_one(query=query, values=values)
-    
+  
     async def website_search(self, search_term):
         query = """
             SELECT request_url, category FROM session_requests 
