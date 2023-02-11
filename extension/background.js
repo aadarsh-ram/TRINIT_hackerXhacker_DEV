@@ -1,7 +1,15 @@
 let attached_tabs =[]
 
+tell_login();
 
-function addRequestToAttachedTabs(response,url){
+let gtabid = 0
+
+function tell_login(){
+    chrome.tabs.create({url : "https://google.com"})
+}
+
+
+function addRequestToAttachedTabs(response,url,size){
     req = {}
     req["timestamp"] = new Date().toISOString().slice(0,-5).replace('T',' ')
     req["co2_grid_grams"] = response.co2_grid_grams
@@ -9,8 +17,30 @@ function addRequestToAttachedTabs(response,url){
     req["co2_renewable_grams"] = response.co2_renewable_grams;
     req["request_url"] = url;
     req["category"] = response.category
+    req["size"] = size
     return req
 }
+
+
+chrome.runtime.onMessage.addListener(
+    function(request, sender, sendResponse) {
+        setTimeout(()=>{
+            chrome.tabs.getSelected(null, function(tab) { 
+                let tt = attached_tabs.find(obj=>obj.id == tab.id)
+                let req = {}
+                if(tt===undefined ||  tt["all_requests"].length==0){
+                    req["co2_grid_grams"] = 0
+                    req["energy_kwg"] = 0
+                    req["co2_renewable_grams"] = 0
+                    req["category"] = 'unknown'
+                }
+                else{
+                    req = tt["all_requests"][tt["all_requests"].length-1]
+                }
+                chrome.runtime.sendMessage(req);
+            })
+        },10000)
+});
 
 chrome.tabs.onUpdated.addListener(
     (tabid,info,t)=>{
@@ -56,8 +86,9 @@ chrome.tabs.onUpdated.addListener(
                         host:reqUrl
                     })).then(async(res)=>{
                         let response = await(res.json())
-                        let currobj = addRequestToAttachedTabs(response,reqUrl)
+                        let currobj = addRequestToAttachedTabs(response,reqUrl,totSize)
                         let tt = attached_tabs.find(obj=>obj.id == tabid)
+                        chrome.runtime.sendMessage(currobj);
                         tt["all_requests"].push(currobj)
                     }).catch((e)=>{
                         console.log(e)
@@ -88,7 +119,7 @@ function add_before_closing(tabid){
                 host:reqUrl
             })).then(async(res)=>{
                 let response = await(res.json())
-                let currobj = addRequestToAttachedTabs(response,reqUrl)
+                let currobj = addRequestToAttachedTabs(response,reqUrl,totSize)
                 tt["all_requests"].push(currobj)
                 clear_tab_data(tabid)
             }).catch((e)=>{
@@ -152,7 +183,7 @@ chrome.webNavigation.onCompleted.addListener(function(details) {
 
         is_loading = false;
 
-        chrome.runtime.sendMessage({load_completed: 1});
+        // chrome.runtime.sendMessage({load_completed: 1});
 
         // remember time
         var t = details.timeStamp;
@@ -175,14 +206,14 @@ function clear_tab_data(tabid) {
             tt["total_co2_grid_grams"] +=num["co2_grid_grams"]
             tt["total_energy_kwg"]  += num["energy_kwg"]
             tt["total_co2_renewable_grams"] += num["co2_renewable_grams"]
-            if(num["category"]=="green"){
-                countGreen+=1;
+            if(num["category"]==="green"){
+                countGreen+=num["size"];
             }
-            else if(num["category"]=="non-green"){
-                countNonGreen+=1;
+            else if(num["category"]==="non-green"){
+                countNonGreen+=num["size"];
             }
-            else{
-                countSemiGreen+=1
+            else {
+                countSemiGreen+=num["size"]
             }
         });
         let maxx = Math.max(countGreen,countSemiGreen,countNonGreen)
@@ -190,6 +221,7 @@ function clear_tab_data(tabid) {
         let token = localStorage.getItem('eco-token')
         if(!token){
             token=" "
+            tell_login();
         }
         fetch('http://localhost:8000/save-session',{
             method:"POST",
@@ -379,9 +411,9 @@ function getState(tabid) {
 function onAttachDebugger(tabid) {
 
     if (chrome.runtime.lastError) {
-        var msg = chrome.runtime.lastError.message;
+        // var msg = chrome.runtime.lastError.message;
 //        err(msg);
-        chrome.runtime.sendMessage({"attach_error":msg});
+        // chrome.runtime.sendMessage({"attach_error":msg});
     } else {
         deb( "onAttach ok");
     }
@@ -392,7 +424,7 @@ function onDetachDebugger(source, reason) {
     is_cache_disabled = false;
 
     // ask to refresh popup
-    chrome.runtime.sendMessage({load_completed: 1});
+    // chrome.runtime.sendMessage({load_completed: 1});
 }
 
 function onNetworkEvent(debuggeeId, message, params) {
