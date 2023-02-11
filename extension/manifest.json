@@ -1,0 +1,26 @@
+{
+    "name": "Eco Track",
+    "description": "Track Carbon Emissions for user activity",
+    "version": "1.0.0",
+    "externally_connectable":{
+      "matches" :["http://*/*"]
+    },
+    "permissions": [
+      "<all_urls>", "debugger", "webNavigation","notifications","tabs","activeTab"
+    ],
+    "browser_action": {
+      "default_title": "Eco Track",
+      "default_popup": "popup.html",
+      "default_icon" : "icon.png"
+    },
+    "icons": {
+      "16": "icon.png",
+      "128": "icon.png" 
+    },
+    "background": {
+        "scripts" : ["background.js"],
+        "persistent": true
+    },
+    "manifest_version": 2,
+    "minimum_chrome_version": "38"
+  }  
