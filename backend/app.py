@@ -2,15 +2,20 @@ import os
 import uvicorn
 from dotenv import load_dotenv
 from typing import Optional
-from fastapi import FastAPI, status, Response, Request, HTTPException
+from fastapi import FastAPI, status, Response, Request, HTTPException, Body, Depends
 from fastapi.middleware.cors import CORSMiddleware
+
+from models import UserLoginSchema, UserSchema
+from auth.auth_bearer import JWTBearer
+from auth.auth_handler import signJWT, decodeJWT
+
+# Import all environment variables
+load_dotenv()
 
 # Import custom modules
 from db_operations import Database
 from stat_utils import check_green_host, get_co2_emission
-
-# Import all environment variables
-load_dotenv()
+from utils import get_hashed_password, verify_password
 
 # Postgres database variables
 db_host = os.getenv("DB_HOST")
@@ -68,11 +73,40 @@ async def get_session(request: Request, session_id: str):
 
 # Post routes
 
-@app.post("/save-session")
+@app.post("/signup")
+async def signup(request: Request, user: UserSchema = Body(...)):
+    """Create a new user"""
+    try:
+        await db.add_user(user.username, get_hashed_password(user.password))
+    except Exception as e:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST)
+
+    return signJWT(user.username)
+
+@app.post("/login")
+async def login(request: Request, user: UserLoginSchema = Body(...)):
+    """Login a user"""
+    username = user.username
+    password = user.password
+
+    # Check if user exists
+    user_exists = await db.get_user(username)
+    if not user_exists:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST)
+
+    # Check if password is correct
+    if not verify_password(password, user_exists['password']):
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST)
+
+    return signJWT(username)
+
+@app.post("/save-session", dependencies=[Depends(JWTBearer())])
 async def save_session(request: Request):
     """Save the session to the database"""
     data = await request.json()
-    username = data["username"]
+    token = request.headers["authorization"].split(" ")[1]
+    
+    username = decodeJWT(token)["user_id"]
     session_id = data["session_id"]
     timestamp = data["timestamp"]
     total_co2_renewable_grams = data["total_co2_renewable_grams"]
