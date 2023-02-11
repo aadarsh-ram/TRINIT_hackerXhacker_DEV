@@ -1,35 +1,44 @@
 import { useEffect, useState } from 'react';
-import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
-import CardActions from '@mui/material/CardActions';
 import CardContent from '@mui/material/CardContent';
-import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
+import CircularProgress from '@mui/material/CircularProgress';
 
 
-const Recommendation = ({data})=>{
+
+const Recommendation = ({data,loading})=>{
 
     const [list,setList] = useState(["No Recommendations Right Now"])
-
+    const [isLoading,setIsLoading] = useState(loading)
     useEffect(()=>{
         if(data != null) setList(data)
     },[data])
 
+    useEffect(()=>{
+        setIsLoading(loading)
+    },[loading])
+
     return (
     <Card sx={{
         borderRadius: "20px",
-        background: "#FFFFFF"
+        background: "#FFFFFF",
+        minHeight:"20vh",
     }}>
-      <CardContent>
-        <Typography variant="h5" component="div" style={{paddingBottom:"1rem"}}>
-            Recommendations
-        </Typography>
+      <CardContent style={{display:"flex"}}>
+        {(isLoading) ? <div><CircularProgress size={50}/></div> :
         <div>
+            <Typography variant="h5" component="div" style={{paddingBottom:"1rem"}}>
+                Recommendations
+            </Typography>
             {list.map((item,i)=>{
-            return <Typography key={i} variant="body2">
-                {item}
-            </Typography>})}
-        </div>
+            return <a key={i} 
+                        style={{color:item["category"]}}
+                        href={"https://"+item["request_url"]}>
+                        <Typography  variant="body2">
+                            {item["request_url"]}
+                        </Typography>
+                    </a>})}
+        </div>}
       </CardContent>
     </Card>
   );

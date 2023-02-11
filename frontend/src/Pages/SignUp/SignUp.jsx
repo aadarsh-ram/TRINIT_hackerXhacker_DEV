@@ -17,7 +17,10 @@ const SignUp = ()=>{
     
     const submit = async()=>{
         setIsLoading(true)
-        if(confirm != password) alert("Passwords Dont Match!")
+        if(confirm != password) {
+            alert("Passwords Dont Match!")
+            setIsLoading(false)
+        }
         else{
             // Fetch
             await fetch("http://localhost:8000/signup", {
@@ -35,7 +38,7 @@ const SignUp = ()=>{
     }
 
     return(<>
-        <Navbar/>
+        <Navbar/>{
         (isLoading) 
         ? <Loader/>
         :<>
@@ -43,7 +46,7 @@ const SignUp = ()=>{
             <input value={password} placeholder="Password" type="password" onChange={(e)=>{setPassword(e.target.value)}}/>
             <input value={confirm} placeholder="Confirm Password" type="password" onChange={(e)=>{setConfirm(e.target.value)}}/>
             <button onClick={()=>submit()}>Submit</button>
-        </> </>);
+        </>} </>);
 }
 
 export default SignUp;

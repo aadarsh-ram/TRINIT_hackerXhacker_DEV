@@ -1,4 +1,4 @@
-import { Navbar, Cards, ProfileCard, Emission, Loader } from "../../Components";
+import { Navbar, Cards, ProfileCard, Emission, Loader, Recommendation } from "../../Components";
 import Accordion from '@mui/material/Accordion';
 import AccordionSummary from '@mui/material/AccordionSummary';
 import AccordionDetails from '@mui/material/AccordionDetails';
@@ -51,6 +51,8 @@ const List = ()=>{
     const [webCard, setWebCard] = useState(null)
     const [expanded, setExpanded] = useState(false);
     const [cardData, setCardData] = useState([{"request_url": "No Websites!",}]);
+    const [recom, setRecom] = useState([]);
+    const [isRecomLoading, setIsRecomLoading] = useState(false)
     const [sessionList, setSessionList] = useState([])
     const [isLoading, setIsLoading] = useState(false)
     
@@ -103,8 +105,21 @@ const List = ()=>{
         }
     };
 
-    const handleSiteClick = async(i) =>{        
+    const handleSiteClick = async(i) =>{
         setWebCard(cardData[i])
+        setIsRecomLoading(true)
+        await fetch("http://localhost:8000/get-recommendations/?"+ new URLSearchParams({
+                url:cardData[i]["request_url"]
+            }), {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+            }).then(async(res)=>{
+                let response = await res.json()
+                setRecom(response)
+            }).catch(e =>console.log(e)) 
+        setIsRecomLoading(false)       
     }
     
         
@@ -132,7 +147,7 @@ const List = ()=>{
                 {sessionList.map((item,i)=>{
                     return (
                     <Accordion 
-                        style = {{background: color[item["color"]],margin:"1rem", boxShadow: (expanded === i) ? "rgba(0, 0, 0, 0.35) 0px 5px 15px" : "rgba(100, 100, 111, 0.2) 0px 7px 29px 0px" }}
+                        style = {{background: color[item["color"]],margin:"1rem", padding:"0.3rem", boxShadow: (expanded === i) ? "rgba(0, 0, 0, 0.35) 0px 5px 15px" : "rgba(100, 100, 111, 0.2) 0px 7px 29px 0px", borderRadius:"20px" }}
                         expanded={expanded === i} 
                         onChange={handleChange(i)} 
                         key={i} >
@@ -159,8 +174,9 @@ const List = ()=>{
                     </Accordion>)
                 })}
             </div>
-            <div style={{position:"relative",top:"-10vh",padding:"1rem",flexBasis:"25vw"}}>
+            <div style={{position:"relative",top:"-20vh",padding:"1rem",flexBasis:"25vw"}}>
                 <Emission data={webCard}/>
+                <Recommendation data={recom} loading={isRecomLoading}/>
             </div>
         </section>
         <section>

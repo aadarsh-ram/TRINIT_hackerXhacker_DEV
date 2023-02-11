@@ -3,6 +3,8 @@ import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import Typography from '@mui/material/Typography';
 import KeyboardDoubleArrowUpIcon from '@mui/icons-material/KeyboardDoubleArrowUp';
+import KeyboardDoubleArrowDownIcon from '@mui/icons-material/KeyboardDoubleArrowDown';
+
 
 
 const colorSet = {"green":"#00FF40","semi-green":"#90EE90","no-green":"#D0312D"}
@@ -37,14 +39,14 @@ const Emission = ({data})=> {
         }
     },[data])
 
-    const colorfinder = (val)=>{
-        if(val < 15) return colorSet2["green"]
-        else if (val < 20) return colorSet2["semi-green"]
-        else return colorSet2["no-green"]
+    const finder = (val)=>{
+        return (val > 10)    
     }
   return (
     (emissionData["request_url"] != "Pick a Website") ?
     <Card sx={{
+        minHeight:"20vh",
+        marginBottom: "1rem",
         borderRadius: "20px",
         background: color,
         boxShadow: "rgba(0, 0, 0, 0.1) 0px 4px 6px -1px, rgba(0, 0, 0, 0.06) 0px 2px 4px -1px"
@@ -57,7 +59,9 @@ const Emission = ({data})=> {
           {emissionData["request_url"]}
         </Typography>
         <div style={{display:"flex",flexFlow:"row nowrap"}}>
-            <div><KeyboardDoubleArrowUpIcon style={{color:colorfinder(emissionData["co2_renewable_grams"])}}/></div>
+            { (finder(emissionData["co2_renewable_grams"])) ? 
+              <div><KeyboardDoubleArrowUpIcon style={{color:"#FF0000"}}/></div>
+              :<div><KeyboardDoubleArrowDownIcon style={{color:"#0000FF"}}/></div>}
             <div>
                 <Typography sx={{ mb: 1.5 }} color="text.secondary">
                 CO2 Renewable Emissions : {emissionData["co2_renewable_grams"]} grams
@@ -65,7 +69,9 @@ const Emission = ({data})=> {
             </div>
         </div>
         <div style={{display:"flex",flexFlow:"row nowrap"}}>
-            <div><KeyboardDoubleArrowUpIcon style={{color:colorfinder(emissionData["co2_grid_grams"])}}/></div>
+          { (finder(emissionData["co2_grid_grams"])) ? 
+                <div><KeyboardDoubleArrowUpIcon style={{color:"#FF0000"}}/></div>
+                :<div><KeyboardDoubleArrowDownIcon style={{color:"#0000FF"}}/></div>}
             <div>
                 <Typography sx={{ mb: 1.5 }} color="text.secondary">
                 CO2 Grid Emissions : {emissionData["co2_grid_grams"]} grams
@@ -73,7 +79,9 @@ const Emission = ({data})=> {
             </div>
         </div>
         <div style={{display:"flex",flexFlow:"row nowrap"}}>
-            <div><KeyboardDoubleArrowUpIcon style={{color:colorfinder(emissionData["energy_kwg"])}}/></div>
+          { (finder(emissionData["energy_kwg"])) ? 
+                <div><KeyboardDoubleArrowUpIcon style={{color:"#FF0000"}}/></div>
+                :<div><KeyboardDoubleArrowDownIcon style={{color:"#0000FF"}}/></div>}
             <div>
                 <Typography sx={{ mb: 1.5 }} color="text.secondary">
                     Energy in KiloWatt/Gram : {emissionData["energy_kwg"]}KW/g
@@ -83,6 +91,8 @@ const Emission = ({data})=> {
       </CardContent>
     </Card> :
     <Card sx={{
+        minHeight:"20vh",
+        marginBottom: "1rem",
         borderRadius: "20px",
         background: color,
         boxShadow: "rgba(0, 0, 0, 0.1) 0px 4px 6px -1px, rgba(0, 0, 0, 0.06) 0px 2px 4px -1px"
