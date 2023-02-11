@@ -101,9 +101,6 @@ function add_before_closing(tabid){
 }
 
 
-
-console.log("background")
-
 // current tab being inspected
 
 var is_cache_disabled = false;
@@ -190,8 +187,15 @@ function clear_tab_data(tabid) {
         });
         let maxx = Math.max(countGreen,countSemiGreen,countNonGreen)
         tt["green_category"] = (maxx==countGreen ? "green" : (maxx==countSemiGreen ? "semi-green" : "non-green"))
+        let token = localStorage.getItem('eco-token')
+        if(!token){
+            token=" "
+        }
         fetch('http://localhost:8000/save-session',{
             method:"POST",
+            headers:{
+                "Authorization" : `Bearer ${token}`
+            },
             body:JSON.stringify(tt)
         }).then(()=>{
             console.log("saved session")
@@ -201,7 +205,7 @@ function clear_tab_data(tabid) {
     }
 
     catch(e){
-        console.log('no tab boss')
+        console.log("error",e)
     }
 
     delete netList[tabid+"list"];
@@ -252,10 +256,7 @@ function add_file(tabid, reqid, url, code, from_cache, type) {
     obj["co2_renewable_grams"] = 0
     obj["co2_grid_grams"]=0
     obj["energy_kwg"]=0
-    // console.log(url)
-    // console.log(url.substr(0,4))
     chrome.tabs.getSelected(null, function(tab) { 
-        console.log(tab.url)
         if(tab.url.substr(0,4)==="http"){
             let dataForHost = new URL(tab.url)
             obj["request_url"] = dataForHost.hostname
@@ -317,17 +318,12 @@ chrome.debugger.onDetach.addListener(onDetachDebugger);
 chrome.debugger.onEvent.addListener(onNetworkEvent);
 
 function startDebugger(tabid) {
-    console.log("going to attach")
-    console.log(attached_tabs)
     deb("startDebugger");
 
     var version = "1.0";
     var cb = onAttachDebugger.bind(null, tabid);
 
         chrome.debugger.attach({"tabId":tabid}, version, cb);
-
-        console.log(chrome.runtime.lastError)
-
         if (chrome.runtime.lastError)
             return false;
 
@@ -419,7 +415,6 @@ function onNetworkEvent(debuggeeId, message, params) {
         cachedList[params.requestId] = 1;
 
     } else if (message == "Network.dataReceived") {
-//        console.debug("data", params);
 
         // a chunk received!
         var reqid = params.requestId
