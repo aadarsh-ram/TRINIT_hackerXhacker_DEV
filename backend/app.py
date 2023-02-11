@@ -63,7 +63,7 @@ async def get_recommendations(request: Request, url: str):
     recommends_with_stats = [await db.website_search(recommendation) for recommendation in recommendations]
     return recommends_with_stats
 
-@app.get("/get-emission-stats")
+@app.get("/user/get-emission-stats")
 async def get_emission_stats(request: Request, bytes: int, host: Optional[str] = None):
     """Get the co2 emission of a website"""
     try:
@@ -73,17 +73,27 @@ async def get_emission_stats(request: Request, bytes: int, host: Optional[str] =
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR) from e
     return co2_emission
 
-@app.get("/get-user-sessions")
-async def get_user_sessions(request: Request, username: str):
+@app.get("/user/get-user-sessions", dependencies=[Depends(JWTBearer())])
+async def get_user_sessions(request: Request):
     """Get all sessions from a user"""
+    token = request.headers["authorization"].split(" ")[1]
+    username = decodeJWT(token)["user_id"]
     sessions = await db.fetch_user_sessions(username)
     return sessions
 
-@app.get("/get-session")
+@app.get("/user/get-session", dependencies=[Depends(JWTBearer())])
 async def get_session(request: Request, session_id: str):
     """Get the session from the database"""
     session = await db.fetch_session(session_id)
     return session
+
+@app.get("/user/get-user-stats", dependencies=[Depends(JWTBearer())])
+async def get_user_stats(request: Request):
+    """Get the stats of a user"""
+    token = request.headers["authorization"].split(" ")[1]
+    username = decodeJWT(token)["user_id"]
+    stats = await db.fetch_user_stats(username)
+    return stats
 
 # Post routes
 
@@ -114,7 +124,7 @@ async def login(request: Request, user: UserLoginSchema = Body(...)):
 
     return signJWT(username)
 
-@app.post("/save-session", dependencies=[Depends(JWTBearer())])
+@app.post("/user/save-session", dependencies=[Depends(JWTBearer())])
 async def save_session(request: Request):
     """Save the session to the database"""
     data = await request.json()

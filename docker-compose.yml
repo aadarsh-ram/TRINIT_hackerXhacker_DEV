@@ -1,0 +1,38 @@
+version: '3.8'
+
+services:
+  api:
+    container_name: ecotrack-api
+    build: ./backend
+    env_file:
+      - ./backend/.env
+    environment:
+      DB_HOST: ${DB_HOST}
+      DB_USER: ${DB_USER}
+      DB_PASSWORD: ${DB_PASSWORD}
+      DB_NAME: ${DB_NAME}
+      JWT_SECRET: ${JWT_SECRET}
+    volumes:
+      - ./backend:/app
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db
+
+  db:
+    container_name: ecotrack-db
+    image: postgres:15.0-alpine
+    volumes:
+      - postgres_data:/data/postgres
+    env_file:
+      - ./backend/.env
+    environment:
+      POSTGRES_HOST: ${DB_HOST}
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: ${DB_NAME}
+    ports:
+      - "5432:5432"
+
+volumes:
+  postgres_data:
