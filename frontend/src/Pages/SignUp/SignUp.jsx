@@ -67,7 +67,9 @@ const SignUp = ()=>{
         <Navbar/>{
         (isLoading) 
         ? <Loader/>
-        :<div style={{background: "#DAD7CD",height:"95vh",display:"flex",flexFlow:"column",alignItems:"center",justifyContent:"center"}}>
+        :<div style={{background: "url(/watermark.png)", backgroundRepeat: "no-repeat", backgroundSize: "cover"
+        // "#DAD7CD"
+        ,height:"95vh",display:"flex",flexFlow:"column",alignItems:"center",justifyContent:"center"}}>
         <h1 style={{color:"#000000"}}>Sign Up</h1>
         <FormControl sx={{ m: 4, width: '25ch' }} variant="standard">
           <InputLabel htmlFor="standard-adornment-username">Username</InputLabel>
@@ -118,7 +120,7 @@ const SignUp = ()=>{
         </FormControl>
 
             <button style={{margin:"1rem", padding:"1rem 2rem"}} onClick={()=>submit()}>Submit</button>
-            <a href="/login">Login</a>
+            <a style={{color:"#000000"}} href="/login">Login</a>
         </div>} </div>);
 }
 
