@@ -1,6 +1,7 @@
 import os
 import uvicorn
 from dotenv import load_dotenv
+from typing import Optional
 from fastapi import FastAPI, status, Response, Request, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 
@@ -47,7 +48,7 @@ async def hello():
     return {"message": "Hello user! Tip: open /docs or /redoc for documentation"}
 
 @app.get("/get-emission-stats")
-async def get_emission_stats(request: Request, bytes: int, host: str):
+async def get_emission_stats(request: Request, bytes: int, host: Optional[str] = None):
     """Get the co2 emission of a website"""
     green = check_green_host(host)
     co2_emission = get_co2_emission(bytes, green)
