@@ -1,0 +1,15 @@
+{
+    "name": "Eco Track",
+    "short_name": "Track Carbon Emissions for user activity",
+    "description": "Reports page size, cache usage, network requests, load time.",
+    "version": "1.0.0",
+    "permissions": [
+      "<all_urls>", "debugger", "webNavigation","notifications","tabs","activeTab"
+    ],
+    "background": {
+        "scripts" : ["background.js"],
+        "persistent": true
+    },
+    "manifest_version": 2,
+    "minimum_chrome_version": "38"
+  }  
