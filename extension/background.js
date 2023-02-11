@@ -29,6 +29,7 @@ chrome.tabs.onUpdated.addListener(
                 tab["total_co2_grid_grams"] = 0
                 tab["total_energy_kwg"] = 0
                 tab["all_requests"] = []
+                tab["green_category"] = "semi-green"
                 attached_tabs.push(tab)
             }
         })
@@ -170,11 +171,25 @@ function clear_tab_data(tabid) {
 
     try{
         let tt = attached_tabs.find(obj=>obj.id == tabid)
+        let countNonGreen=0
+        let countSemiGreen=0
+        let countGreen=0
         tt["all_requests"].map((num) =>{
             tt["total_co2_grid_grams"] +=num["co2_grid_grams"]
             tt["total_energy_kwg"]  += num["energy_kwg"]
             tt["total_co2_renewable_grams"] += num["co2_renewable_grams"]
+            if(num["category"]=="green"){
+                countGreen+=1;
+            }
+            else if(num["category"]=="non-green"){
+                countNonGreen+=1;
+            }
+            else{
+                countSemiGreen+=1
+            }
         });
+        let maxx = Math.max(countGreen,countSemiGreen,countNonGreen)
+        tt["green_category"] = (maxx==countGreen ? "green" : (maxx==countSemiGreen ? "semi-green" : "non-green"))
         fetch('http://localhost:8000/save-session',{
             method:"POST",
             body:JSON.stringify(tt)
