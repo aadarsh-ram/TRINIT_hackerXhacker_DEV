@@ -23,7 +23,7 @@ const Landing = ()=>{
         navigate('/',{replace:true})
     }
     return (<>
-        <img src="/Footprint.png" className={styles.carbonimg} />
+        <img src="src/assets/Footprint.png" className={styles.carbonimg} />
         <div className={styles.icondiv}>
             <FaLeaf color='#000000' className={styles.icon}/>
         </div>
@@ -58,12 +58,12 @@ const Landing = ()=>{
                     </Button>
                 </div>
             </Box>
-            <Box 
+                    
+            <Box style={{background : 'url(src/assets/forest.png)',}}
                 sx={{
                     width: '42.36vw',
                     height: '100vh',
                     backgroundColor: '#242424',
-                    background : 'url(/forest.png)',
                     backdropFilter: 'blur(5px)'
             }}>
             </Box>

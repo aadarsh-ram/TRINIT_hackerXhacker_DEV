@@ -11,12 +11,22 @@ import FormControl from '@mui/material/FormControl';
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 
+const sendTokenToChromeExtension = ({ extensionId, jwt}) => {
+    chrome.runtime.sendMessage(extensionId, { jwt }, response => {
+      if (!response.success) {
+        // console.log('error sending message', response);
+        return response;
+      }
+      // console.log('Sucesss ::: ', response.message)
+    });
+  }
 
 const Login = ()=>{
     
     const navigate = useNavigate()
     const [userName,setUserName] = useState("");
     const [password,setPassword] = useState("");
+    const [eID,setEID] = useState("");
     const [showPassword, setShowPassword] = useState(false);
     const [isLoading,setIsLoading] = useState(false);
 
@@ -44,6 +54,7 @@ const Login = ()=>{
         if(response.ok){
             let body = await response.json()
             localStorage.setItem(config["token_name"],body['access_token'])
+            sendTokenToChromeExtension({extensionId: eID,jwt:body['access_token']})
             navigate('/list')
             login("Logged In")
         }
@@ -86,6 +97,14 @@ const Login = ()=>{
                 </IconButton>
               </InputAdornment>
             }
+          />
+        </FormControl>
+
+        <FormControl sx={{ m: 4, width: '25ch' }} variant="standard">
+          <InputLabel htmlFor="standard-adornment-eid">Extension ID</InputLabel>
+          <Input
+            id="standard-adornment-eid"
+            onChange={(e)=>{setEID(e.target.value)}}
           />
         </FormControl>
 

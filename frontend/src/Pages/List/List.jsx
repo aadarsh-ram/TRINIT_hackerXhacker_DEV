@@ -38,7 +38,8 @@ const List = ()=>{
 
     const getUserStats = async()=>{
         setIsLoading(true)
-        let token = jwt(localStorage.getItem(config["token_name"]))    
+        let token = jwt(localStorage.getItem(config["token_name"]))  
+        console.log(token)  
         await fetch( `${config["backend_url"]}/user/get-user-stats/?`+ new URLSearchParams({
             username:token["user_id"]
         }), {
@@ -67,6 +68,7 @@ const List = ()=>{
             },
         }).then(async(res)=>{
             let response = await res.json()
+            console.log(res)
             if(response.length != 0) setEmpty(false)
             setSessionList(response)
         }).catch(e =>console.log(e))
@@ -124,7 +126,7 @@ const List = ()=>{
         <section style={{height:"35vh",width:"100%",overflow:"clip"}}
         // backgroundColor: "#0093E9", backgroundImage: "linearGradient(160deg, #0093E9 0%, #80D0C7 100%)"}}
         >
-            <img style={{height:"35vh",width:"100%"}} src={bgImage()+".jpg"} />
+            <img style={{height:"35vh",width:"100%"}} src={"src/assets"+bgImage()+".jpg"} />
         </section>
 
         <section style={{background:"#DAD7CD" ,height:"100vh",width:"100vw",display:"flex",justifyContent:"center",flexFlow:"row wrap"}}>

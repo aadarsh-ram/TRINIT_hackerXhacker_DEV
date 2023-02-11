@@ -1,7 +1,7 @@
 import React from "react";
 import {
 	About,
-	Landing, List, Login, SignUp
+	Landing, List, Login, SignUp, ExtLogin
 } from "../Pages";
 
 export const routes = [
@@ -24,6 +24,11 @@ export const routes = [
 		title: "About",
 		path: "/about",
 		element: <About />
+	},
+	{
+		title: "ExtLogin",
+		path: "/extLogin",
+		element: <ExtLogin />
 	},
 ];
 
