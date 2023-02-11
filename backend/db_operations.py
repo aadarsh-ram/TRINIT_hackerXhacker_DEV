@@ -16,7 +16,7 @@ class Database:
     
     async def create_tables(self):
         await self.database.execute(query="CREATE TABLE IF NOT EXISTS user_accounts (username VARCHAR(50) PRIMARY KEY, password VARCHAR(200));")
-        await self.database.execute(query="CREATE TABLE IF NOT EXISTS user_sessions (username VARCHAR(50), session_id TEXT UNIQUE, timestamp TIMESTAMP, total_co2_renewable_grams TEXT, total_co2_grid_grams TEXT, total_energy_kwg TEXT);")
+        await self.database.execute(query="CREATE TABLE IF NOT EXISTS user_sessions (username VARCHAR(50), session_id TEXT UNIQUE, timestamp TIMESTAMP, total_co2_renewable_grams TEXT, total_co2_grid_grams TEXT, total_energy_kwg TEXT, green_category TEXT);")
         await self.database.execute(query="CREATE TABLE IF NOT EXISTS session_requests (session_id TEXT, timestamp TIMESTAMP, request_url TEXT, co2_renewable_grams TEXT, co2_grid_grams TEXT, energy_kwg TEXT, category TEXT);")
 
     async def get_user(self, username):
@@ -29,15 +29,16 @@ class Database:
         values = {"username": username, "password": password}
         await self.database.execute(query=query, values=values)
     
-    async def add_session(self, username, session_id, timestamp, total_co2_renewable_grams, total_co2_grid_grams, total_energy_kwg):
-        query = "INSERT INTO user_sessions (username, session_id, timestamp, total_co2_renewable_grams, total_co2_grid_grams, total_energy_kwg) VALUES (:username, :session_id, :timestamp, :total_co2_renewable_grams, :total_co2_grid_grams, :total_energy_kwg)"
+    async def add_session(self, username, session_id, timestamp, total_co2_renewable_grams, total_co2_grid_grams, total_energy_kwg, green_category):
+        query = "INSERT INTO user_sessions (username, session_id, timestamp, total_co2_renewable_grams, total_co2_grid_grams, total_energy_kwg, green_category) VALUES (:username, :session_id, :timestamp, :total_co2_renewable_grams, :total_co2_grid_grams, :total_energy_kwg, :green_category)"
         values = {
             "username": username,
             "session_id": session_id,
             "timestamp": datetime.fromisoformat(timestamp),
             "total_co2_renewable_grams": str(total_co2_renewable_grams),
             "total_co2_grid_grams": str(total_co2_grid_grams),
-            "total_energy_kwg": str(total_energy_kwg)
+            "total_energy_kwg": str(total_energy_kwg),
+            "green_category": green_category
         }
         await self.database.execute(query=query, values=values)
 

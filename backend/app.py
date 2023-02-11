@@ -79,7 +79,7 @@ async def signup(request: Request, user: UserSchema = Body(...)):
     try:
         await db.add_user(user.username, get_hashed_password(user.password))
     except Exception as e:
-        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST)
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST) from e
 
     return signJWT(user.username)
 
@@ -112,11 +112,12 @@ async def save_session(request: Request):
     total_co2_renewable_grams = data["total_co2_renewable_grams"]
     total_co2_grid_grams = data["total_co2_grid_grams"]
     total_energy_kwg = data["total_energy_kwg"]
+    green_category = data["green_category"]
 
     try:
-        await db.add_session(username, session_id, timestamp, total_co2_renewable_grams, total_co2_grid_grams, total_energy_kwg)
+        await db.add_session(username, session_id, timestamp, total_co2_renewable_grams, total_co2_grid_grams, total_energy_kwg, green_category)
     except Exception as e:
-        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST)
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR) from e
 
     all_requests = data["all_requests"]
     for req in all_requests:
