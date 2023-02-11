@@ -38,3 +38,10 @@ class Database:
             "session_id": session_id
         }
         return await self.database.fetch_all(query=query, values=values)
+    
+    async def fetch_user_sessions(self, username):
+        query = "SELECT distinct(session_id), timestamp FROM session_requests WHERE username=:username ORDER BY timestamp DESC;"
+        values = {
+            "username": username
+        }
+        return await self.database.fetch_all(query=query, values=values)

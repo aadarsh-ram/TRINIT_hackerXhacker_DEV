@@ -40,6 +40,8 @@ async def startup():
 async def shutdown():
     await db.dbs_disconnect()
 
+# Get routes
+
 @app.get("/", status_code=status.HTTP_200_OK)
 async def hello():
     return {"message": "Hello user! Tip: open /docs or /redoc for documentation"}
@@ -50,6 +52,20 @@ async def get_emission_stats(request: Request, bytes: int, host: str):
     green = check_green_host(host)
     co2_emission = get_co2_emission(bytes, green)
     return co2_emission
+
+@app.get("/get-user-sessions")
+async def get_user_sessions(request: Request, username: str):
+    """Get all sessions from a user"""
+    sessions = await db.fetch_user_sessions(username)
+    return sessions
+
+@app.get("/get-session")
+async def get_session(request: Request, session_id: str):
+    """Get the session from the database"""
+    session = await db.fetch_session(session_id)
+    return session
+
+# Post routes
 
 @app.post("/save-session")
 async def save_session(request: Request):
@@ -69,12 +85,6 @@ async def save_session(request: Request):
         await db.add_session(session_id, username, timestamp, request_url, co2_renewable_grams, co2_grid_grams, energy_kwg, category)
 
     return {"message": "Session saved"}
-
-@app.get("/get-session")
-async def get_session(request: Request, session_id: str):
-    """Get the session from the database"""
-    session = await db.fetch_session(session_id)
-    return session
 
 if __name__ == '__main__':
     uvicorn.run("app:app", reload=True)
