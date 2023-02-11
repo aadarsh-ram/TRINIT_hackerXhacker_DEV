@@ -5,6 +5,7 @@ import Typography from '@mui/material/Typography';
 import CircularProgress from '@mui/material/CircularProgress';
 
 
+const color = {"green":"#00FF40","semi-green":"#90EE90","no-green":"#D0312D"}
 
 const Recommendation = ({data,loading})=>{
 
@@ -32,7 +33,7 @@ const Recommendation = ({data,loading})=>{
             </Typography>
             {list.map((item,i)=>{
             return <a key={i} 
-                        style={{color:item["category"]}}
+                        style={{color: color[item["category"]]}}
                         href={"https://"+item["request_url"]}>
                         <Typography  variant="body2">
                             {item["request_url"]}

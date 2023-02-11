@@ -8,7 +8,6 @@ import KeyboardDoubleArrowDownIcon from '@mui/icons-material/KeyboardDoubleArrow
 
 
 const colorSet = {"green":"#00FF40","semi-green":"#90EE90","no-green":"#D0312D"}
-const colorSet2 = {"green":"#FF0000","semi-green":"#00FF00","no-green":"#0000FF"}
 
 
 

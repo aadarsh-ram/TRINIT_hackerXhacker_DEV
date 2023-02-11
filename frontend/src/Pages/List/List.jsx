@@ -47,59 +47,79 @@ const color = {"green":"#00FF40","semi-green":"#90EE90","no-green":"#D0312D"}
 const List = ()=>{
 
     const navigate = useNavigate()
-    const [webItem,setWebItem] = useState(null);
     const [webCard, setWebCard] = useState(null)
     const [expanded, setExpanded] = useState(false);
     const [cardData, setCardData] = useState([{"request_url": "No Websites!",}]);
     const [recom, setRecom] = useState([]);
     const [isRecomLoading, setIsRecomLoading] = useState(false)
     const [sessionList, setSessionList] = useState([])
+    const [userStats,setUserStats] = useState({"user_co2_renewable_grams": 0, "user_co2_grid_grams": 0, "user_energy_kwg": 0});
     const [isLoading, setIsLoading] = useState(false)
+    const [empty,setEmpty] = useState(true)
     
 
     useEffect(()=>{
         const login = localStorage.getItem("ecotrack-token")
         if(login == null) navigate("/login")
-        else getSession()
+        else {
+            getSession()
+            getUserStats()
+        }
     },[])
 
-    const getSession = async()=>{
+    const getUserStats = async()=>{
         setIsLoading(true)
-        let token = jwt(localStorage.getItem("ecotrack-token"))        
-        await fetch("http://localhost:8000/get-user-sessions/?"+ new URLSearchParams({
+        let token = jwt(localStorage.getItem("ecotrack-token"))    
+        await fetch("http://localhost:8000/user/get-user-stats/?"+ new URLSearchParams({
             username:token["user_id"]
         }), {
             method: "GET",
             headers: {
                 "Content-Type": "application/json",
+    			"Authorization": `Bearer ${localStorage.getItem("ecotrack-token")}`,
+            },
+        }).then(async(res)=>{
+            let response = await res.json()
+            setUserStats(response)
+        }).catch(e =>console.log(e))
+        setIsLoading(false)
+    }
+
+    const getSession = async()=>{
+        setIsLoading(true)
+        let token = jwt(localStorage.getItem("ecotrack-token"))        
+        await fetch("http://localhost:8000/user/get-user-sessions/?"+ new URLSearchParams({
+            username:token["user_id"]
+        }), {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+    			"Authorization": `Bearer ${localStorage.getItem("ecotrack-token")}`,
             },
         }).then(async(res)=>{
             let response = await res.json()
             setSessionList(response)
         }).catch(e =>console.log(e))
         setIsLoading(false)
-
     }
 
     const handleChange = (panel) => async(event, isExpanded) => {
         if(isExpanded){
-            setWebItem(panel)
             setExpanded(panel)
-            await fetch("http://localhost:8000/get-session/?"+ new URLSearchParams({
+            await fetch("http://localhost:8000/user/get-session/?"+ new URLSearchParams({
                 session_id:sessionList[panel]["session_id"]
             }), {
                 method: "GET",
                 headers: {
                     "Content-Type": "application/json",
+			        "Authorization": `Bearer ${localStorage.getItem("ecotrack-token")}`,
                 },
             }).then(async(res)=>{
                 let response = await res.json()
-                console.log(response)
                 setCardData(response)
             }).catch(e =>console.log(e))
         }
         else{
-            setWebItem(null)
             setExpanded(false)
             setWebCard(null)
         }
@@ -117,22 +137,12 @@ const List = ()=>{
                 },
             }).then(async(res)=>{
                 let response = await res.json()
+                console.log(response)
                 setRecom(response)
             }).catch(e =>console.log(e)) 
         setIsRecomLoading(false)       
     }
     
-        
-    useEffect(()=>{
-        if(webItem!=null){
-            //Fetch
-            // setCardData(data)
-        }
-        else {
-            setCardData([{"request_url": "No Websites!",}])
-        }
-    },[webItem])
-
 
     return (
     (isLoading)?  <Loader/> :<>
@@ -142,8 +152,17 @@ const List = ()=>{
         </section>
 
         <section style={{background:"beige" ,height:"55vh",width:"100vw",display:"flex",justifyContent:"center",flexFlow:"row wrap"}}>
-            <div style={{position:"relative",top:"-10vh",padding:"1rem",flexBasis:"20vw"}}><ProfileCard/></div>
+            <div style={{position:"relative",top:"-10vh",padding:"1rem",flexBasis:"20vw"}}><ProfileCard userStats={userStats}/></div>
             <div style={{position:"relative",top:"0vh",padding:"1rem",flexBasis:"50vw"}}>
+                {(!empty) ? <></>: <Accordion 
+                        style = {{margin:"1rem", padding:"0.3rem", boxShadow: "rgba(100, 100, 111, 0.2) 0px 7px 29px 0px", borderRadius:"20px" }}>
+                        <AccordionSummary
+                        expandIcon={<ExpandMoreIcon />}
+                        aria-controls="panel1a-content"
+                        >
+                        <h2>No Network Requests Yet!</h2>
+                        </AccordionSummary>
+                    </Accordion> }
                 {sessionList.map((item,i)=>{
                     return (
                     <Accordion 

@@ -6,17 +6,28 @@ import Typography from '@mui/material/Typography';
 import { CardActionArea } from '@mui/material';
 import { BsFillPersonFill } from "react-icons/bs";
 import jwt from 'jwt-decode'
+import KeyboardDoubleArrowUpIcon from '@mui/icons-material/KeyboardDoubleArrowUp';
+import KeyboardDoubleArrowDownIcon from '@mui/icons-material/KeyboardDoubleArrowDown';
 
 
-const user = {"name":"YoMama"}
-export default function ProfileCard() {
+export default function ProfileCard({userStats}) {
 
 
     const [user,setUser] = useState("User Name")
+    const [stats,setStats] = useState([])
 
     useEffect(()=>{
         setUser(jwt(localStorage.getItem("ecotrack-token"))["user_id"])
     },[])
+    useEffect(()=>{
+        setStats(userStats)
+    },[userStats])
+
+
+    const finder = (val)=>{
+        return (val > 10)    
+    }
+
   return (
     <Card sx={{
         borderRadius : "20px",
@@ -30,9 +41,38 @@ export default function ProfileCard() {
           <Typography gutterBottom variant="h5" component="div">
             {user}
           </Typography>
+          <div style={{display:"flex",flexFlow:"row nowrap"}}>
+            { (finder(stats["user_co2_grid_grams"])) ? 
+              <div><KeyboardDoubleArrowUpIcon style={{color:"#FF0000"}}/></div>
+              :<div><KeyboardDoubleArrowDownIcon style={{color:"#0000FF"}}/></div>}
+            <div>
+                <Typography sx={{ mb: 1.5 }} color="text.secondary">
+                Total CO2 Grid Emissions : {stats["user_co2_grid_grams"]} grams
+                </Typography>
+            </div>
+        </div>
+        <div style={{display:"flex",flexFlow:"row nowrap"}}>
+            { (finder(stats["user_co2_renewable_grams"])) ? 
+              <div><KeyboardDoubleArrowUpIcon style={{color:"#FF0000"}}/></div>
+              :<div><KeyboardDoubleArrowDownIcon style={{color:"#0000FF"}}/></div>}
+            <div>
+                <Typography sx={{ mb: 1.5 }} color="text.secondary">
+                Total CO2 Renewable Emissions : {stats["user_co2_renewable_grams"]} grams
+                </Typography>
+            </div>
+        </div>
+        <div style={{display:"flex",flexFlow:"row nowrap"}}>
+            { (finder(stats["user_energy_kwg"])) ? 
+              <div><KeyboardDoubleArrowUpIcon style={{color:"#FF0000"}}/></div>
+              :<div><KeyboardDoubleArrowDownIcon style={{color:"#0000FF"}}/></div>}
+            <div>
+                <Typography sx={{ mb: 1.5 }} color="text.secondary">
+                Total Energy in KiloWatt/Gram : {stats["user_energy_kwg"]} grams
+                </Typography>
+            </div>
+        </div>
           <Typography variant="body2" color="text.secondary">
-            Lizards are a widespread group of squamate reptiles, with over 6,000
-            species, ranging across all continents except Antarctica
+            
           </Typography>
         </CardContent>
       </CardActionArea>
