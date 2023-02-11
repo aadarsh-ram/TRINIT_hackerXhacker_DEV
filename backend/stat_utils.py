@@ -1,4 +1,5 @@
 import requests
+from bs4 import BeautifulSoup
 
 def check_green_host(hostname):
     """Check if the host is green"""
@@ -32,3 +33,13 @@ def get_co2_emission(bytes, green):
         "category": green_category,
     }
     return edited_response
+
+def get_recommended_sites(url):
+    """Get recommended sites for a given url"""
+    base_url = f"https://www.sitelike.org/similar/{url}/"
+    response = requests.get(base_url, headers={"User-Agent": "Mozilla/5.0"})
+    soup = BeautifulSoup(response.text, "html.parser")
+    panel_divs = soup.find_all("div", {"class" : "panel panel-default rowP" })
+    link_divs = [div.find("a", {"class" : "btn btn-link btn-lg"}) for div in panel_divs[:10]]
+    links = [div.get_text().strip() for div in link_divs]
+    return links

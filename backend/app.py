@@ -14,7 +14,7 @@ load_dotenv()
 
 # Import custom modules
 from db_operations import Database
-from stat_utils import check_green_host, get_co2_emission
+from stat_utils import check_green_host, get_co2_emission, get_recommended_sites
 from utils import get_hashed_password, verify_password
 
 # Postgres database variables
@@ -51,6 +51,13 @@ async def shutdown():
 @app.get("/", status_code=status.HTTP_200_OK)
 async def hello():
     return {"message": "Hello user! Tip: open /docs or /redoc for documentation"}
+
+@app.get("/get-recommendations")
+async def get_recommendations(request: Request, url: str):
+    """Get recommended sites for a given url"""
+    recommendations = get_recommended_sites(url)
+    recommends_with_stats = [await db.website_search(recommendation) for recommendation in recommendations]
+    return recommends_with_stats
 
 @app.get("/get-emission-stats")
 async def get_emission_stats(request: Request, bytes: int, host: Optional[str] = None):
