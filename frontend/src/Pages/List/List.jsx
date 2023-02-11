@@ -8,20 +8,22 @@ import { useEffect, useState } from "react";
 import { BsFillCalendarFill, BsClockFill } from "react-icons/bs"
 import { useNavigate } from "react-router-dom";
 import jwt from 'jwt-decode'
+import { config } from "../../config/index"
 
 
-const arr = [
-    {
-        "session_id": "12346",
-        "timestamp": "2011-05-19T15:36:38",
-        "color": "green"
-    },
-    {
-        "session_id": "12345",
-        "timestamp": "2011-05-18T15:36:38",
-        "color": "no-green"
-    }
-]
+
+// const arr = [
+//     {
+//         "session_id": "12346",
+//         "timestamp": "2011-05-19T15:36:38",
+//         "color": "green"
+//     },
+//     {
+//         "session_id": "12345",
+//         "timestamp": "2011-05-18T15:36:38",
+//         "color": "no-green"
+//     }
+// ]
 // const data = [
 //     {
 //         "session_id": "12346",
@@ -59,7 +61,7 @@ const List = ()=>{
     
 
     useEffect(()=>{
-        const login = localStorage.getItem("ecotrack-token")
+        const login = localStorage.getItem(config["token_name"])
         if(login == null) navigate("/login")
         else {
             getSession()
@@ -69,14 +71,14 @@ const List = ()=>{
 
     const getUserStats = async()=>{
         setIsLoading(true)
-        let token = jwt(localStorage.getItem("ecotrack-token"))    
-        await fetch("http://localhost:8000/user/get-user-stats/?"+ new URLSearchParams({
+        let token = jwt(localStorage.getItem(config["token_name"]))    
+        await fetch( `${config["backend_url"]}/user/get-user-stats/?`+ new URLSearchParams({
             username:token["user_id"]
         }), {
             method: "GET",
             headers: {
                 "Content-Type": "application/json",
-    			"Authorization": `Bearer ${localStorage.getItem("ecotrack-token")}`,
+    			"Authorization": `Bearer ${localStorage.getItem(config["token_name"])}`,
             },
         }).then(async(res)=>{
             let response = await res.json()
@@ -87,17 +89,18 @@ const List = ()=>{
 
     const getSession = async()=>{
         setIsLoading(true)
-        let token = jwt(localStorage.getItem("ecotrack-token"))        
-        await fetch("http://localhost:8000/user/get-user-sessions/?"+ new URLSearchParams({
+        let token = jwt(localStorage.getItem(config["token_name"]))        
+        await fetch( `${config["backend_url"]}/user/get-user-sessions/?`+ new URLSearchParams({
             username:token["user_id"]
         }), {
             method: "GET",
             headers: {
                 "Content-Type": "application/json",
-    			"Authorization": `Bearer ${localStorage.getItem("ecotrack-token")}`,
+    			"Authorization": `Bearer ${localStorage.getItem(config["token_name"])}`,
             },
         }).then(async(res)=>{
             let response = await res.json()
+            if(response.length != 0) setEmpty(false)
             setSessionList(response)
         }).catch(e =>console.log(e))
         setIsLoading(false)
@@ -106,13 +109,13 @@ const List = ()=>{
     const handleChange = (panel) => async(event, isExpanded) => {
         if(isExpanded){
             setExpanded(panel)
-            await fetch("http://localhost:8000/user/get-session/?"+ new URLSearchParams({
+            await fetch( `${config["backend_url"]}/user/get-session/?`+ new URLSearchParams({
                 session_id:sessionList[panel]["session_id"]
             }), {
                 method: "GET",
                 headers: {
                     "Content-Type": "application/json",
-			        "Authorization": `Bearer ${localStorage.getItem("ecotrack-token")}`,
+			        "Authorization": `Bearer ${localStorage.getItem(config["token_name"])}`,
                 },
             }).then(async(res)=>{
                 let response = await res.json()
@@ -128,7 +131,7 @@ const List = ()=>{
     const handleSiteClick = async(i) =>{
         setWebCard(cardData[i])
         setIsRecomLoading(true)
-        await fetch("http://localhost:8000/get-recommendations/?"+ new URLSearchParams({
+        await fetch(`${config["backend_url"]}/get-recommendations/?`+ new URLSearchParams({
                 url:cardData[i]["request_url"]
             }), {
                 method: "GET",
@@ -137,7 +140,6 @@ const List = ()=>{
                 },
             }).then(async(res)=>{
                 let response = await res.json()
-                console.log(response)
                 setRecom(response)
             }).catch(e =>console.log(e)) 
         setIsRecomLoading(false)       

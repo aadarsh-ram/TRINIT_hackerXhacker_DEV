@@ -1,6 +1,10 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Loader, Navbar } from "../../Components";
+import { config } from "../../config/index"
+import { login,error } from "../../Components/Toast/Toast"
+
+
 
 const SignUp = ()=>{
     
@@ -11,7 +15,7 @@ const SignUp = ()=>{
     const [isLoading,setIsLoading] = useState(false);
 
     useEffect(()=>{
-        const login = localStorage.getItem("ecotrack-token")
+        const login = localStorage.getItem(config["token_name"])
         if(login != null) navigate("/list")
     },[])
     
@@ -23,17 +27,21 @@ const SignUp = ()=>{
         }
         else{
             // Fetch
-            await fetch("http://localhost:8000/signup", {
+            const response = await fetch(`${config["backend_url"]}/signup`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
                 },
                 body: JSON.stringify({"username":userName,"password":password}),
-            }).then((res)=>{
-                setIsLoading(false)
-                navigate("/login")
-
-            }).catch(e =>console.log(e))
+            })
+            if(response.ok){
+                navigate('/login')
+                login("Signed Up!")
+            }
+            else {
+                error("Please Try Again")
+            }
+            setIsLoading(false)
         }
     }
 

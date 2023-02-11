@@ -7,13 +7,16 @@ import Typography from '@mui/material/Typography';
 import Menu from '@mui/material/Menu';
 import MenuIcon from '@mui/icons-material/Menu';
 import Container from '@mui/material/Container';
-import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
 import { FaLeaf } from "react-icons/fa";
 import { BsFillPersonFill } from "react-icons/bs";
 import { useNavigate } from 'react-router-dom';
+import { config } from "../../config/index"
+import { error } from "../../Components/Toast/Toast"
+
+
 
 
 
@@ -45,7 +48,7 @@ function Navbar() {
   };
 
   useEffect(()=>{
-    setIsLoggedIn(localStorage.getItem("ecotrack-token"))
+    setIsLoggedIn(localStorage.getItem(config["token_name"]))
   },[])
 
   useEffect(()=>{
@@ -173,8 +176,9 @@ function Navbar() {
                     if(setting == 'Dashboard') navigate("/list")
                     if(setting == 'Logout') {
                         setIsLoggedIn(false)
-                        localStorage.removeItem("ecotrack-token");
+                        localStorage.removeItem(config["token_name"]);
                         navigate("/")
+                        error("Logged Out!")
                     }
                     }} 
                     textAlign="center">{setting}</Typography>

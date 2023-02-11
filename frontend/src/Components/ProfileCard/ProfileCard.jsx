@@ -1,13 +1,14 @@
 import { useEffect, useState } from 'react';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
-import CardMedia from '@mui/material/CardMedia';
 import Typography from '@mui/material/Typography';
 import { CardActionArea } from '@mui/material';
 import { BsFillPersonFill } from "react-icons/bs";
 import jwt from 'jwt-decode'
 import KeyboardDoubleArrowUpIcon from '@mui/icons-material/KeyboardDoubleArrowUp';
 import KeyboardDoubleArrowDownIcon from '@mui/icons-material/KeyboardDoubleArrowDown';
+import { config } from "../../config/index"
+
 
 
 export default function ProfileCard({userStats}) {
@@ -17,7 +18,7 @@ export default function ProfileCard({userStats}) {
     const [stats,setStats] = useState([])
 
     useEffect(()=>{
-        setUser(jwt(localStorage.getItem("ecotrack-token"))["user_id"])
+        setUser(jwt(localStorage.getItem(config["token_name"]))["user_id"])
     },[])
     useEffect(()=>{
         setStats(userStats)

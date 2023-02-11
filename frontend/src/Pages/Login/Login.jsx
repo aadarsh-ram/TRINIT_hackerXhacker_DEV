@@ -1,6 +1,9 @@
 import { useState,useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Loader, Navbar } from "../../Components";
+import { config } from "../../config/index"
+import { login,error } from "../../Components/Toast/Toast"
+
 
 const Login = ()=>{
     
@@ -10,26 +13,31 @@ const Login = ()=>{
     const [isLoading,setIsLoading] = useState(false);
 
     useEffect(()=>{
-        const login = localStorage.getItem("ecotrack-token")
+        const login = localStorage.getItem(config["token_name"])
         if(login != null) navigate("/list")
     },[])
     
     const submit = async()=>{
         setIsLoading(true)
         // Fetch
-        await fetch("http://localhost:8000/login", {
+        const response = await fetch(`${config["backend_url"]}/login`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
             },
             body: JSON.stringify({"username":userName,"password":password}),
-        }).then(async(res)=>{
-            let response = await res.json()
-            console.log(response)
-            localStorage.setItem("ecotrack-token",response['access_token'])
-            setIsLoading(false)
+        })
+        if(response.ok){
+            let body = await response.json()
+            localStorage.setItem(config["token_name"],body['access_token'])
             navigate('/list')
-        }).catch(e =>console.log(e))
+            login("Logged In")
+        }
+        else {
+            error("Please Try Again")
+        }
+        setIsLoading(false)
+
     }
     return(
         (isLoading) 
