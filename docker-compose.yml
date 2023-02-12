@@ -33,6 +33,14 @@ services:
       POSTGRES_DB: ${DB_NAME}
     ports:
       - "5432:5432"
+  
+  react:
+    container_name: ecotrack-frontend
+    build: ./frontend
+    ports:
+      - "5173:5173"
+    depends_on:
+      - api
 
 volumes:
   postgres_data:
