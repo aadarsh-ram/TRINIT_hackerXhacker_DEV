@@ -4,11 +4,19 @@ let attached_tabs =[]
 
 let gtabid = 0
 
+chrome.runtime.onMessageExternal.addListener((request, sender, sendResponse) => {
+    if (request.jwt) {
+        console.log('Token ::: ', request.jwt);
+        localStorage.setItem('eco-token')
+        sendResponse({ success: true, message: 'Token has been received' });
+    }
+});
+
 
 //change from google
-function tell_login(){
-    chrome.tabs.create({url : "https://google.com"})
-}
+// function tell_login(){
+//     chrome.tabs.create({url : "https://google.com"})
+// }
 
 
 function addRequestToAttachedTabs(response,url,size){
@@ -83,10 +91,12 @@ chrome.tabs.onUpdated.addListener(
                         reqUrl = dataForHost.hostname
                         //timestamp
                     }
-                    fetch('http://localhost:8000/get-emission-stats?'+new URLSearchParams({
+                    console.log("sending...")
+                    fetch('https://api-aadarsh-ram.cloud.okteto.net/user/get-emission-stats?'+new URLSearchParams({
                         bytes:totSize,
                         host:reqUrl
                     })).then(async(res)=>{
+                        console.log("got response")
                         let response = await(res.json())
                         let currobj = addRequestToAttachedTabs(response,reqUrl,totSize)
                         let tt = attached_tabs.find(obj=>obj.id == tabid)
@@ -116,7 +126,7 @@ function add_before_closing(tabid){
         let tt = attached_tabs.find(obj=>obj.id == tabid)
         netList[tabid+"list"] = []
             let reqUrl=tt["all_requests"][tt["all_requests"].length-1]["request_url"]
-            fetch('http://localhost:8000/get-emission-stats?'+new URLSearchParams({
+            fetch('https://api-aadarsh-ram.cloud.okteto.net/user/get-emission-stats?'+new URLSearchParams({
                 bytes:totSize,
                 host:reqUrl
             })).then(async(res)=>{
@@ -223,9 +233,9 @@ function clear_tab_data(tabid) {
         let token = localStorage.getItem('eco-token')
         if(!token){
             token=" "
-            tell_login();
+            // tell_login();
         }
-        fetch('http://localhost:8000/save-session',{
+        fetch('https://api-aadarsh-ram.cloud.okteto.net/user/save-session',{
             method:"POST",
             headers:{
                 "Authorization" : `Bearer ${token}`
@@ -432,6 +442,8 @@ function onDetachDebugger(source, reason) {
 function onNetworkEvent(debuggeeId, message, params) {
 
     var tabid = debuggeeId.tabId;
+
+    // console.log(params)
 
     if (message == "Network.responseReceived") {
 

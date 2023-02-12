@@ -1,4 +1,3 @@
-console.log("hiiii")
 let gram = document.getElementById("gram")
 let renewgram = document.getElementById("renewgram")
 let kwg = document.getElementById("kwg")
