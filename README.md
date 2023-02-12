@@ -4,6 +4,10 @@
 Eco-Track is an extension developed to make people aware about their carbon emissions during their day to day network activities.
 Part of the Tri-NIT Hackathon 2023 - DEV02 Problem Statement.
 
+## Check it out!
+- API: https://api-aadarsh-ram.cloud.okteto.net/
+- UI: https://react-aadarsh-ram.cloud.okteto.net/
+
 ## Getting Started
 - Clone the repo.
 - Use the docker-compose to get started:
