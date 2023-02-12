@@ -10,7 +10,7 @@ import InputAdornment from '@mui/material/InputAdornment';
 import FormControl from '@mui/material/FormControl';
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
-
+import watermarkImage from "../../../public/assets/watermark.png"
 
 
 const SignUp = ()=>{
@@ -67,7 +67,7 @@ const SignUp = ()=>{
         <Navbar/>{
         (isLoading) 
         ? <Loader/>
-        :<div style={{background: "url(./public/assets/watermark.png)", backgroundRepeat: "no-repeat", backgroundSize: "cover"
+        :<div style={{background: `url(${watermarkImage})`, backgroundRepeat: "no-repeat", backgroundSize: "cover"
         // "#DAD7CD"
         ,height:"95vh",display:"flex",flexFlow:"column",alignItems:"center",justifyContent:"center"}}>
         <h1 style={{color:"#000000"}}>Sign Up</h1>

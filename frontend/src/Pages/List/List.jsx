@@ -9,7 +9,9 @@ import { BsFillCalendarFill, BsClockFill } from "react-icons/bs"
 import { useNavigate } from "react-router-dom";
 import jwt from 'jwt-decode'
 import { config } from "../../config/index"
-
+import lightGreenImage from "../../../public/assets/lightGreen.jpg"
+import semiGreenImage from "../../../public/assets/semiGreen.jpg"
+import redImage from "../../../public/assets/red.jpg"
 
 const colorSet = {"green":"#BCE29E","semi-green":"#E5EBB2","no-green":"#FF8787"}
 
@@ -116,9 +118,9 @@ const List = ()=>{
     }
     
     const bgImage = ()=>{
-        if(userStats["user_co2_grid_grams"]+ userStats["user_co2_renewable_grams"] < 10) return "/lightGreen"
-        else if(userStats["user_co2_grid_grams"]+ userStats["user_co2_renewable_grams"] < 40) return "/semiGreen"
-        else return "/red"
+        if(userStats["user_co2_grid_grams"]+ userStats["user_co2_renewable_grams"] < 10) return lightGreenImage
+        else if(userStats["user_co2_grid_grams"]+ userStats["user_co2_renewable_grams"] < 40) return semiGreenImage
+        else return redImage
     }
     return (
     (isLoading)?  <Loader/> :<>
@@ -126,7 +128,7 @@ const List = ()=>{
         <section style={{height:"35vh",width:"100%",overflow:"clip"}}
         // backgroundColor: "#0093E9", backgroundImage: "linearGradient(160deg, #0093E9 0%, #80D0C7 100%)"}}
         >
-            <img style={{height:"35vh",width:"100%"}} src={"./public/assets"+bgImage()+".jpg"} />
+            <img style={{height:"35vh",width:"100%"}} src={bgImage()} />
         </section>
 
         <section style={{background:"#DAD7CD" ,height:"100vh",width:"100vw",display:"flex",justifyContent:"center",flexFlow:"row wrap"}}>

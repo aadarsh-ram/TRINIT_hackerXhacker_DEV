@@ -4,7 +4,8 @@ import styles from "./styles.module.css"
 import { FaLeaf } from "react-icons/fa";
 import { useNavigate } from 'react-router-dom';
 import { config } from "../../config/index"
-
+import footprintImage from "../../../public/assets/Footprint.png"
+import forestImage from "../../../public/assets/forest.png"
 
 const Landing = ()=>{
     const navigate = useNavigate()
@@ -23,7 +24,7 @@ const Landing = ()=>{
         navigate('/',{replace:true})
     }
     return (<>
-        <img src="./public/assets/Footprint.png" className={styles.carbonimg} />
+        <img src={footprintImage} className={styles.carbonimg} />
         <div className={styles.icondiv}>
             <FaLeaf color='#000000' className={styles.icon}/>
         </div>
@@ -59,7 +60,7 @@ const Landing = ()=>{
                 </div>
             </Box>
                     
-            <Box style={{background : 'url(./public/assets/forest.png)',}}
+            <Box style={{background : `url(${forestImage})`,}}
                 sx={{
                     width: '42.36vw',
                     height: '100vh',
