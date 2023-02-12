@@ -68,7 +68,7 @@ const Login = ()=>{
         <Navbar/>{
         (isLoading) 
         ? <Loader/>
-        :<div style={{background: "url(src/assets/watermark.png)", backgroundRepeat: "no-repeat", backgroundSize: "cover"
+        :<div style={{background: "url(./src/assets/watermark.png)", backgroundRepeat: "no-repeat", backgroundSize: "cover"
         // "#DAD7CD"
         ,height:"95vh",display:"flex",flexFlow:"column",alignItems:"center",justifyContent:"center"}}>
         <h1 style={{color:"#000000"}}>Login</h1>
