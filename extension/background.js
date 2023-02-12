@@ -1,9 +1,11 @@
 let attached_tabs =[]
 
-tell_login();
+// tell_login();
 
 let gtabid = 0
 
+
+//change from google
 function tell_login(){
     chrome.tabs.create({url : "https://google.com"})
 }
