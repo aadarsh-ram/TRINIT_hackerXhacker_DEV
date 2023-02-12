@@ -23,7 +23,7 @@ const Landing = ()=>{
         navigate('/',{replace:true})
     }
     return (<>
-        <img src="./src/assets/Footprint.png" className={styles.carbonimg} />
+        <img src="./public/assets/Footprint.png" className={styles.carbonimg} />
         <div className={styles.icondiv}>
             <FaLeaf color='#000000' className={styles.icon}/>
         </div>
@@ -59,7 +59,7 @@ const Landing = ()=>{
                 </div>
             </Box>
                     
-            <Box style={{background : 'url(./src/assets/forest.png)',}}
+            <Box style={{background : 'url(./public/assets/forest.png)',}}
                 sx={{
                     width: '42.36vw',
                     height: '100vh',

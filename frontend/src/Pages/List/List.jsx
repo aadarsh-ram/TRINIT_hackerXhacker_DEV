@@ -126,7 +126,7 @@ const List = ()=>{
         <section style={{height:"35vh",width:"100%",overflow:"clip"}}
         // backgroundColor: "#0093E9", backgroundImage: "linearGradient(160deg, #0093E9 0%, #80D0C7 100%)"}}
         >
-            <img style={{height:"35vh",width:"100%"}} src={"./src/assets"+bgImage()+".jpg"} />
+            <img style={{height:"35vh",width:"100%"}} src={"./public/assets"+bgImage()+".jpg"} />
         </section>
 
         <section style={{background:"#DAD7CD" ,height:"100vh",width:"100vw",display:"flex",justifyContent:"center",flexFlow:"row wrap"}}>
