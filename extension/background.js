@@ -91,7 +91,7 @@ chrome.tabs.onUpdated.addListener(
                         //timestamp
                     }
                     console.log("sending...")
-                    fetch('https://api-aadarsh-ram.cloud.okteto.net/user/get-emission-stats?'+new URLSearchParams({
+                    fetch('https://api-aadarsh-ram.cloud.okteto.net/get-emission-stats?'+new URLSearchParams({
                         bytes:totSize,
                         host:reqUrl
                     })).then(async(res)=>{
@@ -125,7 +125,7 @@ function add_before_closing(tabid){
         let tt = attached_tabs.find(obj=>obj.id == tabid)
         netList[tabid+"list"] = []
             let reqUrl=tt["all_requests"][tt["all_requests"].length-1]["request_url"]
-            fetch('https://api-aadarsh-ram.cloud.okteto.net/user/get-emission-stats?'+new URLSearchParams({
+            fetch('https://api-aadarsh-ram.cloud.okteto.net/get-emission-stats?'+new URLSearchParams({
                 bytes:totSize,
                 host:reqUrl
             })).then(async(res)=>{
