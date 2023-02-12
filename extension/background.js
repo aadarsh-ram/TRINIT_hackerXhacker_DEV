@@ -13,10 +13,9 @@ chrome.runtime.onMessageExternal.addListener((request, sender, sendResponse) => 
 });
 
 
-//change from google
-// function tell_login(){
-//     chrome.tabs.create({url : "https://google.com"})
-// }
+function tell_login(){
+    chrome.tabs.create({url : "https://react-aadarsh-ram.cloud.okteto.net/extlogin"})
+}
 
 
 function addRequestToAttachedTabs(response,url,size){
