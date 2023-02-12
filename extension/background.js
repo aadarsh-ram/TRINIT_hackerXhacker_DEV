@@ -1,6 +1,6 @@
 let attached_tabs =[]
 
-// tell_login();
+tell_login();
 
 let gtabid = 0
 
